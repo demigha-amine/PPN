@@ -10,7 +10,7 @@ Matrice* create_mat(int row, int col) {
 	Matrice->row = row;
 	Matrice->col = col;
     Matrice->size = row * col ;
-    Matrice->data = (double*) malloc((row*col) * sizeof(double));
+    Matrice->data = (double*) malloc((row*col) * sizeof(double) + 1);
 	return Matrice;
 }
 
