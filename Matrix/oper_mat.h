@@ -7,7 +7,7 @@
 // Verifier les dimensions des matrices
 int check_dimensions(Matrice *m1, Matrice *m2);
 
-// Multiplication des matrices
+// Multiplication des matrices carres
 Matrice* mult(Matrice* m1, Matrice* m2);  
 
 // Addition des matrices
@@ -28,3 +28,5 @@ Matrice* addScalar(double n, Matrice* m);
 // Transposé d'une matrice
 Matrice* transpose(Matrice* m);
 
+// Multiplication des matrices
+Matrice* dotprod(Matrice* m1, Matrice* m2); 

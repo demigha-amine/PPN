@@ -97,3 +97,22 @@ Matrice* transpose(Matrice* m) {
 	}
 	return mat;
 }
+
+Matrice* dotprod(Matrice* m1, Matrice* m2){
+	if (m1->col == m2->row) {
+		Matrice *m = create_mat(m1->row, m2->col);
+		for (int i = 0; i < m1->row; i++) {
+			for (int j = 0; j < m2->col; j++) {
+				double sum = 0;
+				for (int k = 0; k < m2->row; k++) {
+					sum += m1->data[i * m1->row + k] * m2->data[k * m2->row + j];
+				}
+				m->data[i* m->row + j] = sum;
+			}
+		}
+		return m;
+	} else {
+		printf("Dimension mistmatch dot: %dx%d %dx%d\n", m1->row, m1->col, m2->row, m2->col);
+		exit(1);
+	}
+}
