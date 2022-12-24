@@ -49,6 +49,15 @@ int main() {
     printf("TRANSP M7\n");
     affiche_mat(M7);
 
+    Matrice* M8 = create_mat(2,3);
+    remplir_mat(M8,3);
+
+    Matrice* M11 = create_mat(2, 2);
+    remplir_mat(M11, 2);
+
+    Matrice* M9 = dotprod(M11,M8);
+    printf("dot M9\n");
+    affiche_mat(M9);
 
 
     free_mat(M1);
