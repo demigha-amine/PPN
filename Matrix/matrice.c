@@ -14,7 +14,7 @@ Matrice* create_mat(int row, int col) {
 	return Matrice;
 }
 
-void remplir_mat(Matrice *m, int n) {
+void remplir_mat(Matrice *m, double n) {
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
 			m->data[i* m->row + j] = n;

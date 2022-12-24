@@ -13,7 +13,7 @@ Matrice* create_mat(int row, int col);
 
 
 //remplire la matrice
-void remplir_mat(Matrice *m, int n);
+void remplir_mat(Matrice *m, double n);
 
 //liberer la matrice
 void free_mat(Matrice *m);
