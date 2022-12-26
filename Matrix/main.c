@@ -17,7 +17,7 @@ int main() {
     affiche_mat(M2);
 
     Matrice* M3 = create_mat(2, 2);
-    remplir_mat(M3, 1);
+    remplir_mat(M3, 3);
     printf("create M3\n");
     affiche_mat(M3);
 

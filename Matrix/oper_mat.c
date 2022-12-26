@@ -11,14 +11,9 @@ int check_dimensions(Matrice *m1, Matrice *m2) {
 Matrice* mult(Matrice *m1, Matrice *m2) {
 	if (check_dimensions(m1, m2)) {
 		Matrice *m = create_mat(m1->row, m1->col);
-		for (int i = 0; i < m1->row; i++)
-			{
-			for (int k = 0; k < m2->col; k++)
-			{
-			const double _a_ = m1->data[i * m1->row + k];
-			
-			for (int j = 0; j < m2->row; j++)
-				m->data[i * m1->row + j] +=  _a_ * m2->data[k * m1->row + j];
+		for (int i = 0; i < m1->row; i++) {
+			for (int j = 0; j < m2->col; j++) {
+				m->data[i * m1->row + j] +=  m1->data[i * m1->row + j] * m2->data[i * m1->row + j];
 			}
 		}
 		return m;
