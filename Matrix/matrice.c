@@ -6,11 +6,11 @@
 #define MAX 100
 
 Matrice* create_mat(int row, int col) {
-	Matrice *Matrice = malloc(sizeof(Matrice));
-	Matrice->row = row;
-	Matrice->col = col;
-    Matrice->size = row * col ;
-    Matrice->data = (double*) malloc((row*col) * sizeof(double) + 1);
+	Matrice *matrice = malloc(sizeof(Matrice));
+	matrice->row = row;
+	matrice->col = col;
+    matrice->size = row * col ;
+    matrice->data = malloc((row*col) * sizeof(double));
 	return Matrice;
 }
 
