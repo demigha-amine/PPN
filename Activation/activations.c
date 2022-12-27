@@ -24,13 +24,13 @@ Matrice* softmax(Matrice* m) {
 	double total = 0;
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
-			total += exp(m->data[i * m->row + j]);
+			total += exp(m->data[i * m->col + j]);
 		}
 	}
 	Matrice* mat = create_mat(m->row, m->col);
 	for (int i = 0; i < mat->row; i++) {
 		for (int j = 0; j < mat->col; j++) {
-			mat->data[i * mat->row + j] = exp(m->data[i * m->row + j]) / total;
+			mat->data[i * mat->col + j] = exp(m->data[i * m->col + j]) / total;
 		}
 	}
 	return mat;
@@ -45,7 +45,7 @@ void Rand_Matrice(Matrice* m) {
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
 			double w = init_weight();
-			m->data[i * m->row + j] = w;
+			m->data[i * m->col + j] = w;
 		}
 	}
 	

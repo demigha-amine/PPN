@@ -13,7 +13,7 @@ Matrice* mult(Matrice *m1, Matrice *m2) {
 		Matrice *m = create_mat(m1->row, m1->col);
 		for (int i = 0; i < m1->row; i++) {
 			for (int j = 0; j < m2->col; j++) {
-				m->data[i * m1->row + j] +=  m1->data[i * m1->row + j] * m2->data[i * m1->row + j];
+				m->data[i * m1->col + j] +=  m1->data[i * m1->col + j] * m2->data[i * m1->col + j];
 			}
 		}
 		return m;
@@ -28,7 +28,7 @@ Matrice* add(Matrice *m1, Matrice *m2) {
 		Matrice *m = create_mat(m1->row, m1->col);
 		for (int i = 0; i < m1->row; i++) {
 			for (int j = 0; j < m2->col; j++) {
-				m->data[i * m1->row + j] +=  m1->data[i * m1->row + j] + m2->data[i * m2->row + j];
+				m->data[i * m1->col + j] +=  m1->data[i * m1->col + j] + m2->data[i * m2->col + j];
 			}
 		}
 		return m;
@@ -43,7 +43,7 @@ Matrice* sub(Matrice *m1, Matrice *m2) {
 		Matrice *m = create_mat(m1->row, m1->col);
 		for (int i = 0; i < m1->row; i++) {
 			for (int j = 0; j < m2->col; j++) {
-				m->data[i * m1->row + j] +=  m1->data[i * m1->row + j] - m2->data[i * m2->row + j];
+				m->data[i * m1->col + j] +=  m1->data[i * m1->col + j] - m2->data[i * m2->col + j];
 			}
 		}
 		return m;
@@ -57,7 +57,7 @@ Matrice* apply(double (*func)(double), Matrice* m) {
 	Matrice *mat = copy_mat(m);
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
-			mat->data[i * m->row + j] = (*func)(m->data[i * m->row + j]);
+			mat->data[i * m->col + j] = (*func)(m->data[i * m->col + j]);
 		}
 	}
 	return mat;
@@ -67,7 +67,7 @@ Matrice* scale(double n, Matrice* m) {
 	Matrice* mat = copy_mat(m);
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
-			mat->data[i * m->row + j] *= n;
+			mat->data[i * m->col + j] *= n;
 		}
 	}
 	return mat;
@@ -77,7 +77,7 @@ Matrice* addScalar(double n, Matrice* m) {
 	Matrice* mat = copy_mat(m);
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
-			mat->data[i * m->row + j] += n;
+			mat->data[i * m->col + j] += n;
 		}
 	}
 	return mat;
@@ -87,7 +87,7 @@ Matrice* transpose(Matrice* m) {
 	Matrice* mat = create_mat(m->col, m->row);
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
-			mat->data[j * m->col + i] = m->data[i * m->row + j];
+			mat->data[j * mat->col + i] = m->data[i * m->col + j];
 		}
 	}
 	return mat;
@@ -100,9 +100,9 @@ Matrice* dotprod(Matrice* m1, Matrice* m2){
 			for (int j = 0; j < m2->col; j++) {
 				double sum = 0;
 				for (int k = 0; k < m2->row; k++) {
-					sum += m1->data[i * m1->row + k] * m2->data[k * m2->row + j];
+					sum += m1->data[i * m1->col + k] * m2->data[k * m2->col + j];
 				}
-				m->data[i* m->row + j] = sum;
+				m->data[i* m->col + j] = sum;
 			}
 		}
 		return m;

@@ -17,7 +17,7 @@ Matrice* create_mat(int row, int col) {
 void remplir_mat(Matrice *m, double n) {
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
-			m->data[i* m->row + j] = n;
+			m->data[i* m->col + j] = n;
 		}
 	}
 }
@@ -32,7 +32,7 @@ void affiche_mat(Matrice* m) {
 	printf("Lignes = %d Columns = %d\n", m->row, m->col);
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
-			printf("%1.3f ", m->data[i * m->row + j]);
+			printf("%1.3f ", m->data[i * m->col + j]);
 		}
 		printf("\n");
 	}
@@ -42,7 +42,7 @@ Matrice* copy_mat(Matrice* m) {
 	Matrice* mat = create_mat(m->row, m->col);
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
-			mat->data[i * mat->row + j] = m->data[i * m->row + j];
+			mat->data[i * mat->col + j] = m->data[i * m->col + j];
 		}
 	}
 	return mat;
@@ -54,7 +54,7 @@ void save_mat(Matrice* m, char* file) {
 	fprintf(fichier, "%d\n", m->col);
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
-			fprintf(fichier, "%.6f\n", m->data[i * m->row + j]);
+			fprintf(fichier, "%.6f\n", m->data[i * m->col + j]);
 		}
 	}
 	printf("Successfully saved Matrice to %s\n", file);
@@ -74,7 +74,7 @@ Matrice* charger_mat(char* file) {
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
 			fgets(tab, MAX, fichier);
-			m->data[i * m->row + j] = strtod(tab, NULL);
+			m->data[i * m->col + j] = strtod(tab, NULL);
 		}
 	}
 	printf("Sucessfully loaded Matrice from %s\n", file);
