@@ -13,10 +13,12 @@ double sigmoid(double x) {
 Matrice* dSigmoid(Matrice* m) {
 	Matrice* ones = create_mat(m->row, m->col);
 	remplir_mat(ones, 1);
-	Matrice* M1 = sub(ones, m);
-	Matrice* M2 = mult(m, M1);
+	Matrice* sigmoid_m = apply(sigmoid, m);
+	Matrice* M1 = sub(ones, sigmoid_m);
+	Matrice* M2 = mult(sigmoid_m, M1);
 	free_mat(ones);
 	free_mat(M1);
+	free_mat(sigmoid_m);
 	return M2;
 }
 
