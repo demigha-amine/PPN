@@ -10,8 +10,8 @@ Matrice* create_mat(int row, int col) {
 	matrice->row = row;
 	matrice->col = col;
     matrice->size = row * col ;
-    matrice->data = malloc((row*col) * sizeof(double));
-	return Matrice;
+    matrice->data = (double*) calloc((row*col) , sizeof(double));
+	return matrice;
 }
 
 void remplir_mat(Matrice *m, double n) {
