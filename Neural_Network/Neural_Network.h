@@ -13,8 +13,8 @@ typedef struct {
 
 	Matrice* hidden_weights;		// Matrice des weights caches
 	Matrice* output_weights;		// Matrice des weights de sortie
-	Matrice* bias;					// Matrice des bias
-
+	Matrice* hidden_bias;					// Matrice des bias caches
+	Matrice* output_bias;					// Matrice des bias de sortie
 
 } NeuralNetwork;
 
