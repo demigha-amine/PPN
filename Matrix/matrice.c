@@ -82,3 +82,16 @@ Matrice* charger_mat(char* file) {
 	return m;
 }
 
+
+int mat_argmax(Matrice* m) {
+	// Pour les matrice vecteur (M*1)
+	double max_arg = 0;
+	int max_idx = 0;
+	for (int i = 0; i < m->row; i++) {
+		if (m->data[i] > max_arg) {
+			max_arg = m->data[i];
+			max_idx = i;
+		}
+	}
+	return max_idx;
+}

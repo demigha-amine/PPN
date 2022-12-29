@@ -60,6 +60,15 @@ int main() {
     affiche_mat(M9);
 
 
+    Matrice* M12 = create_mat(10, 1);
+    M12->data[5] = 999;
+    printf("M12\n");
+    affiche_mat(M12);
+
+    int idx = mat_argmax(M12);
+    printf("MAX INDEX OF M9 = %d\n", idx);
+
+
     free_mat(M1);
     free_mat(M2);
     free_mat(M3);

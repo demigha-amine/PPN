@@ -30,4 +30,7 @@ void save_mat(Matrice* m, char* fichier);
 // charger une matrice d'un fichier
 Matrice* charger_mat(char* fichier);
 
+// trouver l'index de l'argument maximale de la matrice
+int mat_argmax(Matrice* m);
+
 
