@@ -33,6 +33,10 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size);
 
 
+// Fonction de prediction d'une image par notre reseau
+Matrice* predict_network(NeuralNetwork* net, Matrice* IMG);
+
+
 // Fonction qui affiche les informations d'un reseau de neuron
 void affiche_network(NeuralNetwork* net);
 
