@@ -1,47 +1,41 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <stdint.h>
+#include "../mnist_reader/mnist_reader.h"
 #include "Neural_Network.h"
 
+#define size 1000
+#define MAX_SIZE 10000
 
 
-int main() {
+int main(void) {
 
-    NeuralNetwork* net = create_network(20, 16, 10, 0.1);
+    NeuralNetwork* net = create_network(IMAGE_SIZE, HIDDEN_NODES, OUTPUT_SIZE, LEARNING_RATE);
     printf("Number of Inputs: %d\n", net->Num_Inputs);
 	printf("Number of Hidden Nodes: %d\n", net->Num_Hidden);
 	printf("Number of Outputs: %d\n", net->Num_Outputs);
 
 
-	printf("********Before training**********\n\n\n\n\n");
-
-	printf("Hidden Weights: \n");
-	affiche_mat(net->hidden_weights);
-    printf("Hidden Bias: \n");
-	affiche_mat(net->hidden_bias);
-	printf("Output Weights: \n");
-	affiche_mat(net->output_weights);
-	printf("Output bias: \n");
-	affiche_mat(net->output_bias);
-
-	Matrice* input = create_mat(20,1);
-	Rand_Matrice(input);
 	
 
-	Matrice* output = create_mat(10,1);
-	output->data[2] = 1.0;
-	
-
-	train_network(net, input, output);
 
 	printf("**********After training:*********** \n\n\n\n\n\n\n");
 
-	printf("Hidden Weights: \n");
-	affiche_mat(net->hidden_weights);
-    printf("Hidden Bias: \n");
-	affiche_mat(net->hidden_bias);
-	printf("Output Weights: \n");
-	affiche_mat(net->output_weights);
-	printf("Output bias: \n");
-	affiche_mat(net->output_bias);
+
+
+	FILE* imageFile = fopen("../mnist_reader/mnist/train-images-idx3-ubyte", "r");
+	FILE* labelFile = fopen("../mnist_reader/mnist/train-labels-idx1-ubyte", "r");
+
+	// Read size = 15 images from the 50 image
+	uint8_t* images = readMnistImages(imageFile, MAX_SIZE, size);
+	uint8_t* labels = readMnistLabels(labelFile, MAX_SIZE, size);
+
+
+	fclose(imageFile);
+	fclose(labelFile);
+    
+	train_batch_imgs(net,images,labels,size);
+	
+    
 	
 }
