@@ -1,6 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdint.h>
 #include "../mnist_reader/mnist_reader.h"
 #include "Neural_Network.h"
 
