@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "Neural_Network.h"
 
+
+
 NeuralNetwork* create_network(int input, int hidden, int output, double lr) {
 
 	NeuralNetwork* network = malloc(sizeof(NeuralNetwork));
@@ -39,6 +41,7 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 	Matrice* final_inputs = dotprod(net->output_weights, hidden_outputs);
 	Matrice* z_output = add(final_inputs, net->output_bias);
 	Matrice* final_outputs = apply(sigmoid, z_output);
+
 
 
 	// // Matrices des erreurs
@@ -100,14 +103,20 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 	// // weights : dC/dw = (dz/dw)*(da/dz)/(dC/da)
 	// // biases: dC/db = (dz/db)*(da/dz)/(dC/da)
 
-
+	
 	
 	dsigmoid_z_mat = dSigmoid(z_hidden);
+	// printf("dsigmoid_z_mat\n");
+	// affiche_mat(dsigmoid_z_mat);
 	multiplied_mat = mult(hidden_errors, dsigmoid_z_mat);
+	// printf("Multiplied Mat for the hidden layer\n");
+	// affiche_mat(multiplied_mat);
 
 
 	// Adjusting biases
 	scaled_bias_mat = scale(net->LR, multiplied_mat);
+	// printf("scaled_bias_mat\n");
+	// affiche_mat(scaled_bias_mat);
 	Matrice* fixed_hidden_bias_mat = add(net->hidden_bias, scaled_bias_mat);
 
 	// Adjusting weights
@@ -145,4 +154,39 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 	free_mat(final_outputs);
 	free_mat(output_errors);
 	free_mat(hidden_errors);
+}
+
+
+
+
+
+void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size)
+{
+	
+	for (int i =0; i < size; i++)
+	{
+
+		Matrice* IMG = create_mat(IMAGE_SIZE,1);  //IMAGE_SIZE = 784 (CONST)
+ 
+		for (int k=0,j = i * IMAGE_SIZE; j < (i+1) * IMAGE_SIZE; j++,k++)
+		{   
+			IMG->data[k] = (double)images[j]/255;
+
+		}
+
+	    
+	    int index = *(labels + i);  //recupere l'indice de label active
+
+		Matrice* output = create_mat(OUTPUT_SIZE, 1);  //OUTPUT_SIZE = 1 (CONST)
+		output->data[index] = 1.0; // Setting the result
+
+		train_network(net, IMG, output);
+
+		free_mat(IMG);
+		free_mat(output);
+	}
+
+	free(images);
+	free(labels);
+
 }

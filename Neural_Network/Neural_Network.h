@@ -1,6 +1,13 @@
 #pragma once
 #include "../Activation/activations.h"
 #include "../Matrix/oper_mat.h"
+#include "../mnist_reader/mnist_reader.h"
+#include <inttypes.h>
+
+#define IMAGE_SIZE 784
+#define OUTPUT_SIZE 10
+#define HIDDEN_NODES 300
+#define LEARNING_RATE 0.1
 
 
 typedef struct {
@@ -24,3 +31,6 @@ NeuralNetwork* create_network(int input, int hidden, int output, double lr);
 
 // Fonction pour entrainer le reseau de neurones
 void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data);
+
+
+void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size);
