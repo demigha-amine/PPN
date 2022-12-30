@@ -140,6 +140,17 @@ void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int 
 
 
 
+Matrice* predict_network(NeuralNetwork* net, Matrice* IMG) {
+	Matrice* hidden_inputs	= dotprod(net->hidden_weights, IMG);
+	Matrice* hidden_outputs = apply(sigmoid, hidden_inputs);
+
+	Matrice* final_inputs = dotprod(net->output_weights, hidden_outputs);
+	Matrice* final_outputs = apply(sigmoid, final_inputs);
+
+	return final_outputs;
+}
+
+
 
 
 void affiche_network(NeuralNetwork* net) {
