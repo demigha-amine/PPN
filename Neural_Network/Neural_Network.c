@@ -149,3 +149,10 @@ void affiche_network(NeuralNetwork* net) {
 	printf("Learning Rate = %f\n", net->LR);
 }
 
+
+void free_network(NeuralNetwork *net) {
+	free_mat(net->hidden_weights);
+	free_mat(net->output_weights);
+	free(net);
+	net = NULL;
+}

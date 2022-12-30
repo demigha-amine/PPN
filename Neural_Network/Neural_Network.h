@@ -35,3 +35,6 @@ void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int 
 
 // Fonction qui affiche les informations d'un reseau de neuron
 void affiche_network(NeuralNetwork* net);
+
+// Fonction qui libere la memoire de reseau
+void free_network(NeuralNetwork *net);
