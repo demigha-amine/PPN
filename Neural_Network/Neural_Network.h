@@ -20,8 +20,6 @@ typedef struct {
 
 	Matrice* hidden_weights;		// Matrice des weights caches
 	Matrice* output_weights;		// Matrice des weights de sortie
-	Matrice* hidden_bias;					// Matrice des bias caches
-	Matrice* output_bias;					// Matrice des bias de sortie
 
 } NeuralNetwork;
 
@@ -32,5 +30,5 @@ NeuralNetwork* create_network(int input, int hidden, int output, double lr);
 // Fonction pour entrainer le reseau de neurones
 void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data);
 
-
+// Fonction pour entrainer ensemble des images
 void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size);
