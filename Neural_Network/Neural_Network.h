@@ -2,7 +2,6 @@
 #include "../Activation/activations.h"
 #include "../Matrix/oper_mat.h"
 #include "../mnist_reader/mnist_reader.h"
-#include <inttypes.h>
 
 #define IMAGE_SIZE 784
 #define OUTPUT_SIZE 10
@@ -32,3 +31,7 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 
 // Fonction pour entrainer ensemble des images
 void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size);
+
+
+// Fonction qui affiche les informations d'un reseau de neuron
+void affiche_network(NeuralNetwork* net);

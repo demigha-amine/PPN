@@ -105,6 +105,8 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 
 
 
+
+
 void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size)
 {
 	
@@ -135,3 +137,15 @@ void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int 
 	free(labels);
 
 }
+
+
+
+
+
+void affiche_network(NeuralNetwork* net) {
+	printf("Number of Inputs: %d\n", net->Num_Inputs);
+	printf("Number of Hidden Nodes: %d\n", net->Num_Hidden);
+	printf("Number of Outputs: %d\n", net->Num_Outputs);
+	printf("Learning Rate = %f\n", net->LR);
+}
+
