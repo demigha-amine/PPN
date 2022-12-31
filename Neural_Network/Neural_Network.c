@@ -151,6 +151,30 @@ Matrice* predict_network(NeuralNetwork* net, Matrice* IMG) {
 }
 
 
+double predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size) {
+	int img_correct = 0;
+	for (int i = 0; i < size; i++) {
+		Matrice* IMG = create_mat(IMAGE_SIZE,1);  //IMAGE_SIZE = 784 (CONST)
+
+		for (int k=0,j = i * IMAGE_SIZE; j < (i+1) * IMAGE_SIZE; j++,k++)
+		{   
+			IMG->data[k] = (double)images[j]/255;
+
+		}			// recuperer la matrice qui contient les activations de l'image de test
+
+	    int index = *(labels + i);		// recuperer le vrai label de l'image de test
+
+		Matrice* prediction = predict_network(net, IMG);		// la couche de sortie evaluée par notre reseau pour une image de test
+		
+		if (mat_argmax(prediction) == index) {
+			img_correct++;
+		}
+		free_mat(IMG);
+		free_mat(prediction);
+	}
+	return (1.0 * img_correct / size) * 100;
+}
+
 
 
 void affiche_network(NeuralNetwork* net) {
