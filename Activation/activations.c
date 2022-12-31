@@ -43,6 +43,12 @@ double init_weight() {
 	return ((1.0 * rand()) / (RAND_MAX /2)) - 1;  //des chiffres [-1 , 1]
 }
 
+
+double init_bias() {
+	return (rand() % 20 + 1);
+}
+
+
 void Rand_Matrice(Matrice* m) {
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
@@ -50,6 +56,13 @@ void Rand_Matrice(Matrice* m) {
 			m->data[i * m->col + j] = w;
 		}
 	}
-	
+}
 
+void Rand_Bias(Matrice* m) {
+	for (int i = 0; i < m->row; i++) {
+		for (int j = 0; j < m->col; j++) {
+			double b = init_bias();
+			m->data[i * m->col + j] = b;
+		}
+	}
 }

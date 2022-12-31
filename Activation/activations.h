@@ -15,5 +15,11 @@ Matrice* softmax(Matrice* m);
 // Weights fonction
 double init_weight();
 
+// Bias fonction
+double init_bias();
+
 // Creation d'une matrice random
 void Rand_Matrice(Matrice* m);
+
+// Creation d'une matrice random pour les bias
+void Rand_Bias(Matrice* m);
