@@ -159,7 +159,7 @@ void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int 
 	    
 	    int index = *(labels + i);  //recupere l'indice de label active
 
-		Matrice* output = create_mat(OUTPUT_SIZE, 1);  //OUTPUT_SIZE = 1 (CONST)
+		Matrice* output = create_mat(OUTPUT_SIZE, 1);  //OUTPUT_SIZE = 10 (CONST)
 		output->data[index] = 1.0; // Setting the result
 
 		train_network(net, IMG, output);
@@ -177,6 +177,7 @@ void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int 
 
 Matrice* predict_network(NeuralNetwork* net, Matrice* IMG) {
 	
+	//Appliquer propagation sur l'image
 	Matrice* hidden_inputs	= dotprod(net->hidden_weights, IMG);
 	Matrice* z_hidden = add(hidden_inputs, net->hidden_bias);
 	Matrice* hidden_outputs = apply(sigmoid, z_hidden);
@@ -202,15 +203,15 @@ double predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels
 
 	    int index = *(labels + i);		// recuperer le vrai label de l'image de test
 
-		Matrice* prediction = predict_network(net, IMG);		// la couche de sortie evaluée par notre reseau pour une image de test
+		Matrice* prediction = predict_network(net, IMG); // la couche de sortie evaluée par notre reseau pour une image de test
 		
 		if (mat_argmax(prediction) == index) {
-			img_correct++;
+			img_correct++;  //compteur pour les tests validés 
 		}
 		free_mat(IMG);
 		free_mat(prediction);
 	}
-	return (1.0 * img_correct / size) * 100;
+	return (1.0 * img_correct / size) * 100; //calculer le pourcentage des tests validés
 }
 
 
@@ -226,6 +227,8 @@ void affiche_network(NeuralNetwork* net) {
 void free_network(NeuralNetwork *net) {
 	free_mat(net->hidden_weights);
 	free_mat(net->output_weights);
+	free_mat(net->hidden_bias);
+	free_mat(net->output_bias);
 	free(net);
 	net = NULL;
 }
