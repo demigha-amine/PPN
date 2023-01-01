@@ -18,17 +18,29 @@ int main(void) {
 	FILE* labelFile = fopen("../mnist_reader/mnist/train-labels-idx1-ubyte", "r");
 
 	// Read size (1000) images from the OFFSET = 0 images
-	uint8_t* images = readMnistImages(imageFile, OFFSET, size_train);
-	uint8_t* labels = readMnistLabels(labelFile, OFFSET, size_train);
+	//uint8_t* images = readMnistImages(imageFile, OFFSET, size_train);
+	//uint8_t* labels = readMnistLabels(labelFile, OFFSET, size_train);
 
 
 	fclose(imageFile);
 	fclose(labelFile);
 	
 
-	train_batch_imgs(net,images,labels,size_train);
+	//train_batch_imgs(net,images,labels,size_train);
 
     printf("*********Fin train*******************\n");
+    
+	//sauvgarder les resultats de tests dans des fichiers
+	// save_mat(net->hidden_weights,"hidden_w");
+	// save_mat(net->output_weights,"output_w");
+	// save_mat(net->hidden_bias,"hidden_b");
+	// save_mat(net->output_bias,"output_b");
+
+    //charger les resultats des tests
+    net->hidden_weights = charger_mat("hidden_w");
+	net->hidden_bias = charger_mat("hidden_b");
+	net->output_weights = charger_mat("output_w");
+	net->output_bias = charger_mat("output_b");
 
 
 
