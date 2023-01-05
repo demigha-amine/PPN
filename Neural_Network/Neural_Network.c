@@ -217,10 +217,13 @@ double predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels
 
 
 void affiche_network(NeuralNetwork* net) {
+	printf("\n********* Network *******************\n");
 	printf("Number of Inputs: %d\n", net->Num_Inputs);
 	printf("Number of Hidden Nodes: %d\n", net->Num_Hidden);
 	printf("Number of Outputs: %d\n", net->Num_Outputs);
-	printf("Learning Rate = %f\n", net->LR);
+	printf("Learning Rate: %f\n", net->LR);
+	printf("***************************************\n");
+
 }
 
 

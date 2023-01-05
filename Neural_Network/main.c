@@ -1,67 +1,46 @@
 #include "Neural_Network.h"
+#include <time.h>
 
 
 #define size_train 8000
-#define size_test 1000
 #define OFFSET 8000
 
 
 
 int main(void) {
 
-    NeuralNetwork* net = create_network(IMAGE_SIZE, HIDDEN_NODES, OUTPUT_SIZE, LEARNING_RATE);
-  
+    NeuralNetwork* net = create_network(IMAGE_SIZE, HIDDEN_NODES, OUTPUT_SIZE, LEARNING_RATE); 
 	affiche_network(net);
 
     // LES IMAGES D'ENTRAINEMENT
 	FILE* imageFile = fopen("../mnist_reader/mnist/train-images-idx3-ubyte", "r");
 	FILE* labelFile = fopen("../mnist_reader/mnist/train-labels-idx1-ubyte", "r");
 
-	// Read size (1000) images from the OFFSET = 0 images
-	//uint8_t* images = readMnistImages(imageFile, OFFSET, size_train);
-	//uint8_t* labels = readMnistLabels(labelFile, OFFSET, size_train);
+	// Read size images from the OFFSET
+	uint8_t* images = readMnistImages(imageFile, OFFSET, size_train);
+	uint8_t* labels = readMnistLabels(labelFile, OFFSET, size_train);
 
 
 	fclose(imageFile);
 	fclose(labelFile);
 	
+	printf("\n*********Debut d'entrainement*******************\n");
 
-	//train_batch_imgs(net,images,labels,size_train);
+	//calculer le temps d'entrainements
+    clock_t t = clock();
+	train_batch_imgs(net,images,labels,size_train);
+	clock_t r = clock();
 
-    printf("*********Fin train*******************\n");
+	printf("Temps d'entrainement = %f\n", (double)(r-t)/CLOCKS_PER_SEC);
+
+	printf("\n*********Fin d'entrainement*******************\n");
     
 	//sauvgarder les resultats de tests dans des fichiers
-	// save_mat(net->hidden_weights,"hidden_w");
-	// save_mat(net->output_weights,"output_w");
-	// save_mat(net->hidden_bias,"hidden_b");
-	// save_mat(net->output_bias,"output_b");
-
-    //charger les resultats des tests
-    net->hidden_weights = charger_mat("hidden_w");
-	net->hidden_bias = charger_mat("hidden_b");
-	net->output_weights = charger_mat("output_w");
-	net->output_bias = charger_mat("output_b");
-
-
-
-    // LES IMAGES DE TESTS
-	FILE* image2File = fopen("../mnist_reader/mnist/t10k-images-idx3-ubyte", "r");
-	FILE* label2File = fopen("../mnist_reader/mnist/t10k-labels-idx1-ubyte", "r");
-
-	// Read size images from the OFFSET images
-	uint8_t* images2 = readMnistImages(image2File, OFFSET, size_test);
-	uint8_t* labels2 = readMnistLabels(label2File, OFFSET, size_test);
-
-
-	fclose(image2File);
-	fclose(label2File);
-
-   
-	double NET_RATE = predict_rate_network(net, images2, labels2, size_test);
-	
-	printf("network predict = %1.6f %%\n",NET_RATE);
+	save_mat(net->hidden_weights,"hidden_w");
+	save_mat(net->output_weights,"output_w");
+	save_mat(net->hidden_bias,"hidden_b");
+	save_mat(net->output_bias,"output_b");
 	
 	free_network(net);
     
-	
 }
