@@ -1,12 +1,13 @@
 # Implémentation d’un réseau de neurones pour la reconnaissance de chiffres manuscrit
 
-Un problème classique pour aborder le machine learning est la résolution du jeu de données MNIST. Il s’agit d’une base de données regroupant des images de chiffres manuscrits de petite taille (28x28) en noir et blanc.
+La reconnaissance des chiffres manuscrits est un problème classique, pour l'aborder on se base souvent sur le machine learning. Notre projet consiste à la résolution du jeu de données MNIST. Il s’agit d’une base de données regroupant des images de chiffres manuscrits de petite taille (28x28) en noir et blanc.
 
-Le but est d’entraîner un programme (dans notre cas un réseau de neurones) à classifier chaque image dans la bonne catégorie (un chiffre de 0 à 9). Ce réseau de neurones devra être implémenté de zéro en C ou C++, ce qui nécessitera de se familiariser avec la théorie dans un premier temps.
+Le but est d’entraîner un programme (dans notre cas un réseau de neurones) à classifier chaque image dans la bonne catégorie (un chiffre de 0 à 9). Ce réseau de neurones que nous allons implémenter de zéro en C, ce qui nécessitera de se familiariser avec la théorie dans un premier temps. Ensuite améliorer sa performance jusqu’à avoir de bons résultats.
 
-Le projet se déroulera de la manière suivante.
+Le projet se déroulera de la manière suivante:
 
-Pour le premier semestre:
+
+### Pour le premier semestre:
 
   * Recherches et familiarisation sur l’aspect théorique (structure d’un réseau de neurones, différentiation automatique, descente de gradient, …).
 
@@ -14,7 +15,7 @@ Pour le premier semestre:
 
   * Test de l’ensemble sur le jeu de donnée MNIST.
 
-Puis, à partir du second semestre:
+### Pour le deuxieme semestre:
 
   * Mesures de performances de la version séquentielle.
 
@@ -24,7 +25,10 @@ Puis, à partir du second semestre:
 
   * Si possible, amélioration du taux de précision (en jouant sur des critères comme le choix de la fonction d’activation et le dimensionnement du réseau).
 
+
 En résumé, l’objectif du premier semestre sera de développer une version minimale, et celui du deuxième d’améliorer le temps d’entraînement et la précision.
+
+
 
 ## Compilation et Exécution
 
