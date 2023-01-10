@@ -4,8 +4,8 @@
 #include "mnist_reader.h"
 
 int main(void) {
-	FILE* imageFile = fopen("mnist/train-images-idx3-ubyte", "r");
-	FILE* labelFile = fopen("mnist/train-labels-idx1-ubyte", "r");
+	FILE* imageFile = fopen("mnist/t10k-images-idx3-ubyte", "r");
+	FILE* labelFile = fopen("mnist/t10k-labels-idx1-ubyte", "r");
 
 	// Read 10 images from the 50 image
 	uint8_t* images = readMnistImages(imageFile, 8000, 3);

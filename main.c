@@ -1,7 +1,7 @@
 #include "./Neural_Network/Neural_Network.h"
 
 
-#define size_test 50
+#define size_test 3
 #define OFFSET 8000
 
 
