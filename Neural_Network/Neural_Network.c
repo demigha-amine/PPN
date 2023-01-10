@@ -192,6 +192,8 @@ Matrice* predict_network(NeuralNetwork* net, Matrice* IMG) {
 
 double predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size) {
 	int img_correct = 0;
+	printf("\n***********************************\n");
+
 	for (int i = 0; i < size; i++) {
 		Matrice* IMG = create_mat(IMAGE_SIZE,1);  //IMAGE_SIZE = 784 (CONST)
 
@@ -206,11 +208,18 @@ double predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels
 		Matrice* prediction = predict_network(net, IMG); // la couche de sortie evaluée par notre reseau pour une image de test
 		
 		if (mat_argmax(prediction) == index) {
+		
+			printf("Label de sortie = %d\n",index);
 			img_correct++;  //compteur pour les tests validés 
 		}
 		free_mat(IMG);
 		free_mat(prediction);
 	}
+		
+	printf("***********************************\n");
+	printf("Nombre des predictions correctes est: %d\n",img_correct);
+	printf("Nombre des predictions incorrectes est: %d\n",(size-img_correct));
+
 	return (1.0 * img_correct / size) * 100; //calculer le pourcentage des tests validés
 }
 
