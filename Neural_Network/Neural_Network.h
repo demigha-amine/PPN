@@ -5,7 +5,7 @@
 
 #define IMAGE_SIZE 784
 #define OUTPUT_SIZE 10
-#define HIDDEN_NODES 300
+// #define HIDDEN_NODES 300
 #define LEARNING_RATE 0.1
 
 
