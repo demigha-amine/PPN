@@ -34,6 +34,9 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 // Fonction pour entrainer ensemble des images
 void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size);
 
+// Fonction pour entrainer le reseau en utilisant Basic SGD Algo
+void train_batch_imgs_epochs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size);
+
 // Fonction de prediction d'une image par notre reseau
 Matrice* predict_network(NeuralNetwork* net, Matrice* IMG);
 

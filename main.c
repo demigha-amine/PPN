@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
 	// 1 TRAINING
 
 	clock_t trainin_begin = clock();
-	train_batch_imgs(net,images,labels,size);
+	train_batch_imgs_epochs(net,images,labels,size);
 	clock_t trainin_end = clock();
 
 

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "Neural_Network.h"
 
-
+#define MAX_SIZE 8000
 
 NeuralNetwork* create_network(int input, int hidden, int output, double lr) {
 
@@ -192,6 +192,58 @@ void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int 
 		free_mat(output);
 	}
 
+	free(images);
+	free(labels);
+
+}
+
+
+
+void train_batch_imgs_epochs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size)
+{
+	int epoch = 100;
+	int epochs = size / epoch;
+	double NET_RATE;
+
+	FILE* imageFile = fopen("./mnist_reader/mnist/t10k-images-idx3-ubyte", "r");
+	FILE* labelFile = fopen("./mnist_reader/mnist/t10k-labels-idx1-ubyte", "r");
+
+	// Read size images from the MAX_SIZE images
+	uint8_t* test_images = readMnistImages(imageFile, MAX_SIZE, 1000);
+	uint8_t* test_labels = readMnistLabels(labelFile, MAX_SIZE, 1000);
+
+	
+	fclose(imageFile);
+	fclose(labelFile);
+
+	for (int j = 1; j <= epochs; j++)
+	{
+		printf("%d;",j);
+		for (int i =(j-1)*epoch; i < j*epoch; i++)
+		{
+		Matrice* IMG = create_mat(IMAGE_SIZE,1);  //IMAGE_SIZE = 784 (CONST)
+ 
+		for (int k=0,j = i * IMAGE_SIZE; j < (i+1) * IMAGE_SIZE; j++,k++)
+		{   
+			IMG->data[k] = (double)images[j]/255;
+
+		}	    
+	    int index = *(labels + i);  //recupere l'indice de label active
+
+		Matrice* output = create_mat(OUTPUT_SIZE, 1);  //OUTPUT_SIZE = 1 (CONST)
+		output->data[index] = 1.0; // Setting the result
+
+		train_network(net, IMG, output);
+
+		free_mat(IMG);
+		free_mat(output);
+		}
+		
+		NET_RATE = predict_rate_network(net, test_images, test_labels, 1000);
+		printf("%1.6f\n", NET_RATE);
+
+		
+	}
 	free(images);
 	free(labels);
 
