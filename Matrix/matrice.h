@@ -33,4 +33,7 @@ Matrice* charger_mat(char* fichier);
 // trouver l'index de l'argument maximale de la matrice
 int mat_argmax(Matrice* m);
 
+// trouver l'argument maximale de la matrice
+double mat_max(Matrice* m);
+
 

@@ -7,10 +7,11 @@ double relu(double x){
 }
 
 Matrice* dRelu(Matrice* m) {
+	double max = mat_max(m);
     Matrice* relu_deriv = create_mat(m->row, m->col);
     for (int i = 0; i < m->row; i++) {
         for (int j = 0; j < m->col; j++) {
-            relu_deriv->data[i * m->col + j] = (m->data[i * m->col + j] > 0) ? 1 : 0;
+            relu_deriv->data[i * m->col + j] = (m->data[i * m->col + j] > 0) ? ((max - m->data[i * m->col + j])/(max*max)) : 0;
         }
     }
     return relu_deriv;

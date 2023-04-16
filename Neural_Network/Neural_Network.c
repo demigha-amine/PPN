@@ -34,14 +34,26 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 	
 	Matrice* hidden_inputs	= dotprod(net->hidden_weights, input_data);
 	Matrice* z_hidden = add(hidden_inputs, net->hidden_bias);
-	Matrice* hidden_outputs = apply(sigmoid, z_hidden);
+
+	// Sigmoid
+	// Matrice* hidden_outputs = apply(sigmoid, z_hidden);
+
+	// RELU
+	Matrice* hidden_relu_vec = apply(relu, z_hidden);
+	Matrice* hidden_outputs = scale((1.0/mat_max(z_hidden)), hidden_relu_vec);
 	
 
 	// 2eme Etape (Output Layer)
 	Matrice* final_inputs = dotprod(net->output_weights, hidden_outputs);
 	Matrice* z_output = add(final_inputs, net->output_bias);
-	Matrice* final_outputs = apply(sigmoid, z_output);
 
+	//Sigmoid
+	// Matrice* final_outputs = apply(sigmoid, z_output);
+
+
+	// RELU
+	Matrice* output_relu_vec = apply(relu, z_output);
+	Matrice* final_outputs = scale((1.0/mat_max(z_output)), output_relu_vec);
 	
 
 
@@ -59,9 +71,13 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 	// weights : dC/dw = (dz/dw)*(da/dz)/(dC/da)
 	// biases : dC/db = (dz/db)*(da/dz)/(dC/da)
 
+	// dSigmoid
+	// Matrice* sigmoid_primed_mat = dSigmoid(final_outputs);
 
-	Matrice* sigmoid_primed_mat = dSigmoid(final_outputs);
-	Matrice* multiplied_mat = mult(output_errors, sigmoid_primed_mat);
+	//dRelu
+	Matrice* relu_primed_mat = dRelu(final_outputs);
+
+	Matrice* multiplied_mat = mult(output_errors, relu_primed_mat);
 
 	// Adjusting Biases
 	Matrice* scaled_bias_mat = scale(net->LR, multiplied_mat);
@@ -83,7 +99,7 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 
 	
 	// Free les Matrices pour les utiliser dans la prochaine etape
-	free_mat(sigmoid_primed_mat);
+	free_mat(relu_primed_mat);
 	free_mat(multiplied_mat);
 	free_mat(transposed_mat);
 	free_mat(dot_mat);
@@ -98,9 +114,12 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 	// biases : dC/db = (dz/db)*(da/dz)/(dC/da)
 
 	
-	
-	sigmoid_primed_mat = dSigmoid(hidden_outputs);
-	multiplied_mat = mult(hidden_errors, sigmoid_primed_mat);
+	//dSigmoid
+	// sigmoid_primed_mat = dSigmoid(hidden_outputs);
+
+	//dRelu
+	relu_primed_mat = dRelu(hidden_outputs);
+	multiplied_mat = mult(hidden_errors, relu_primed_mat);
 
 	// Adjusting Biases
 	scaled_bias_mat = scale(net->LR, multiplied_mat);
@@ -122,12 +141,17 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 
 
 	// Free les matrices
-	free_mat(sigmoid_primed_mat);
+	free_mat(relu_primed_mat);
 	free_mat(multiplied_mat);
 	free_mat(transposed_mat);
 	free_mat(dot_mat);
 	free_mat(scaled_mat);
 	free_mat(scaled_bias_mat);
+
+	free_mat(hidden_relu_vec);
+	free_mat(output_relu_vec);
+
+
 	free_mat(hidden_inputs);
 	free_mat(hidden_outputs);
 	free_mat(final_inputs);
@@ -180,11 +204,23 @@ Matrice* predict_network(NeuralNetwork* net, Matrice* IMG) {
 	//Appliquer propagation sur l'image
 	Matrice* hidden_inputs	= dotprod(net->hidden_weights, IMG);
 	Matrice* z_hidden = add(hidden_inputs, net->hidden_bias);
-	Matrice* hidden_outputs = apply(sigmoid, z_hidden);
+
+	//Sigmoid
+	// Matrice* hidden_outputs = apply(sigmoid, z_hidden);
+	
+	//Relu
+	Matrice* hidden_relu_vec = apply(relu, z_hidden);
+	Matrice* hidden_outputs = scale((1.0/mat_max(z_hidden)), hidden_relu_vec);
 
 	Matrice* final_inputs = dotprod(net->output_weights, hidden_outputs);
 	Matrice* z_output = add(final_inputs, net->output_bias);
-	Matrice* final_outputs = apply(sigmoid, z_output);
+
+	//Sigmoid
+	// Matrice* final_outputs = apply(sigmoid, z_output);
+
+	//Relu
+	Matrice* output_relu_vec = apply(relu, z_output);
+	Matrice* final_outputs = scale((1.0/mat_max(z_output)), output_relu_vec);
 	
 	return final_outputs;
 }

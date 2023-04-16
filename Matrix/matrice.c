@@ -95,3 +95,15 @@ int mat_argmax(Matrice* m) {
 	}
 	return max_idx;
 }
+
+
+double mat_max(Matrice* m) {
+	// Pour les matrice vecteur (M*1)
+	double max_arg = m->data[0];
+	for (int i = 1; i < m->row; i++) {
+		if (m->data[i] > max_arg) {
+			max_arg = m->data[i];
+		}
+	}
+	return max_arg;
+}
