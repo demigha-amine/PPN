@@ -2,13 +2,23 @@
 #include <math.h>
 #include "../Matrix/oper_mat.h"
 
+double relu(double x){
+    return (x > 0) ? x : 0;
+}
 
+Matrice* dRelu(Matrice* m) {
+    Matrice* relu_deriv = create_mat(m->row, m->col);
+    for (int i = 0; i < m->row; i++) {
+        for (int j = 0; j < m->col; j++) {
+            relu_deriv->data[i * m->col + j] = (m->data[i * m->col + j] > 0) ? 1 : 0;
+        }
+    }
+    return relu_deriv;
+}
 
 double sigmoid(double x) {
 	return 1.0 / (1 + exp(-x));
 }
-
-
 
 Matrice* dSigmoid(Matrice* m) {
 	Matrice* ones = create_mat(m->row, m->col);

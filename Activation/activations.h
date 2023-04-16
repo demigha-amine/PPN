@@ -1,7 +1,11 @@
 #pragma once
 #include <stdlib.h>
 #include "../Matrix/matrice.h"
+// ReLu function
+double relu(double x);
 
+// ReLu derived
+Matrice* dRelu(Matrice* m);
 
 // Sigmoid fonction
 double sigmoid(double x);
