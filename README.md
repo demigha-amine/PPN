@@ -1,4 +1,4 @@
-# Implémentation d’un réseau de neurones pour la reconnaissance de chiffres manuscrit
+# Implémentation d’un réseau de neurones pour la reconnaissance de chiffres manuscrits
 
 La reconnaissance des chiffres manuscrits est un problème classique, pour l'aborder on se base souvent sur le machine learning. Notre projet consiste à la résolution du jeu de données MNIST. Il s’agit d’une base de données regroupant des images de chiffres manuscrits de petite taille (28x28) en noir et blanc.
 
