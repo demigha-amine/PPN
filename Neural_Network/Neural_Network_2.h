@@ -40,10 +40,10 @@ void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int 
 
 
 // Fonction de prediction d'une image par notre reseau
-Matrice* network_predict(NeuralNetwork* net, Matrice* IMG);
+Matrice* predict_network(NeuralNetwork* net, Matrice* IMG);
 
 // Fonction qui retourne le pourcentage des images correctes par notre reseau 
-double network_predict_rate(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size);
+double predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size);
 
 // Fonction qui affiche les informations d'un reseau de neuron
 void affiche_network(NeuralNetwork* net);

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "Neural_Network.h"
+#include "Neural_Network_2.h"
 
 
 
@@ -245,7 +245,7 @@ void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int 
 
 
 
-Matrice* network_predict(NeuralNetwork* net, Matrice* IMG) {
+Matrice* predict_network(NeuralNetwork* net, Matrice* IMG) {
 	Matrice* hidden_inputs	= dotprod(net->hidden_weights, IMG);
 
 	Matrice* z_hidden = add(hidden_inputs, net->hidden_bias);
@@ -266,7 +266,7 @@ Matrice* network_predict(NeuralNetwork* net, Matrice* IMG) {
 
 
 
-double network_predict_rate(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size) {
+double predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size) {
 	int img_correct = 0;
 	for (int i = 0; i < size; i++) {
 		Matrice* IMG = create_mat(IMAGE_SIZE,1);  //IMAGE_SIZE = 784 (CONST)
@@ -278,7 +278,7 @@ double network_predict_rate(NeuralNetwork* net, uint8_t* images, uint8_t* labels
 		}
 	    int index = *(labels + i);
 
-		Matrice* prediction = network_predict(net, IMG);
+		Matrice* prediction = predict_network(net, IMG);
 		// affiche_mat(prediction);
 		if (mat_argmax(prediction) == index) {
 			img_correct++;
