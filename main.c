@@ -8,13 +8,14 @@
 
 int main(int argc, char **argv) {
 
-	if (argc != 3) {
-        fprintf(stderr, "Error! Expecting :    ./exe	Training size	Hidden Nodes\n");
+	if (argc != 4) {
+        fprintf(stderr, "Error! Expecting :    ./exe	Training size	Hidden Nodes	Test Offset\n");
         return 1;
     }
 
 	int size = atoi(argv[1]);
 	int HIDDEN_NODES = atoi(argv[2]);
+	int test_offset = atoi(argv[3]);
 
 	//CREATE NETWORK
 
@@ -37,7 +38,7 @@ int main(int argc, char **argv) {
 	// 1 TRAINING
 
 	clock_t trainin_begin = clock();
-	train_batch_imgs_epochs(net,images,labels,size);
+	train_batch_imgs(net,images,labels,size);
 	clock_t trainin_end = clock();
 
 
@@ -51,8 +52,8 @@ int main(int argc, char **argv) {
 	labelFile = fopen("./mnist_reader/mnist/t10k-labels-idx1-ubyte", "r");
 
 	// Read size images from the MAX_SIZE images
-	images = readMnistImages(imageFile, MAX_SIZE, 1000);
-	labels = readMnistLabels(labelFile, MAX_SIZE, 1000);
+	images = readMnistImages(imageFile, test_offset, 3000);
+	labels = readMnistLabels(labelFile, test_offset, 3000);
 
 
 	fclose(imageFile);
@@ -60,7 +61,7 @@ int main(int argc, char **argv) {
 
 
     
-	double NET_RATE = predict_rate_network(net, images, labels, 1000);
+	double NET_RATE = predict_rate_network(net, images, labels, 3000);
 
 	
 	// TRAINING DATASET & HIDDEN NODES PERFORMANCE
