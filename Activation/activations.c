@@ -50,6 +50,7 @@ Matrice* softmax(Matrice* m) {
 }
 
 
+
 double init_weight() { 
 	return ((1.0 * rand()) / (RAND_MAX /2)) - 1;  //des chiffres [-1 , 1]
 }
