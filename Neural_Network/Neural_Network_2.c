@@ -10,17 +10,17 @@ NeuralNetwork* create_network(int input, int hidden, int output, double lr) {
 
 	network->Num_Inputs = input;
 	network->Num_Hidden = hidden;
-	network->Num_Hidden_2 = hidden/5;	//
+	network->Num_Hidden_2 = hidden/6;	//
 	network->Num_Outputs = output;
 	network->LR = lr;
 	
 	network->hidden_weights = create_mat(hidden, input);
-	network->hidden_weights_2 = create_mat(hidden/5, hidden);	//
-	network->output_weights = create_mat(output, hidden/5);
+	network->hidden_weights_2 = create_mat(hidden/6, hidden);	//
+	network->output_weights = create_mat(output, hidden/6);
 
 
 	network->hidden_bias = create_mat(hidden,1);
-	network->hidden_bias_2 = create_mat(hidden/5,1);	//
+	network->hidden_bias_2 = create_mat(hidden/6,1);	//
 	network->output_bias = create_mat(output,1);
 
 
