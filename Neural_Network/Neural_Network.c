@@ -28,32 +28,46 @@ NeuralNetwork* create_network(int input, int hidden, int output, double lr) {
 
 
 
-void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data) {
+void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data, int i) {
 
 	// 1ere Etape (Hidden Layer)
 	
 	Matrice* hidden_inputs	= dotprod(net->hidden_weights, input_data);
 	Matrice* z_hidden = add(hidden_inputs, net->hidden_bias);
-
-	// Sigmoid
-	Matrice* hidden_outputs = apply(sigmoid, z_hidden);
-
-	// RELU
-	// Matrice* hidden_relu_vec = apply(relu, z_hidden);
-	// Matrice* hidden_outputs = scale((1.0/mat_max(z_hidden)), hidden_relu_vec);
+    
+	Matrice* hidden_outputs;
+	Matrice* hidden_relu_vec;
+    if (i==0)
+	{
+		// Sigmoid
+	    hidden_outputs = apply(sigmoid, z_hidden);
+	}
+	else {
+     	// RELU
+		hidden_relu_vec = apply(relu, z_hidden);
+		hidden_outputs = scale((1.0/mat_max(z_hidden)), hidden_relu_vec);
+	}
 	
 
 	// 2eme Etape (Output Layer)
 	Matrice* final_inputs = dotprod(net->output_weights, hidden_outputs);
 	Matrice* z_output = add(final_inputs, net->output_bias);
-
-	//Sigmoid
-	Matrice* final_outputs = apply(sigmoid, z_output);
-
-
-	// RELU
-	// Matrice* output_relu_vec = apply(relu, z_output);
-	// Matrice* final_outputs = scale((1.0/mat_max(z_output)), output_relu_vec);
+    
+	Matrice* final_outputs;
+	Matrice* output_relu_vec;
+	if (i==0)
+	{
+		//Sigmoid
+	    final_outputs = apply(sigmoid, z_output);
+	}
+	else {
+     	// RELU
+		output_relu_vec = apply(relu, z_output);
+		final_outputs = scale((1.0/mat_max(z_output)), output_relu_vec);
+	}
+    
+	// SoftMAX
+    final_outputs = softmax(z_output);
 	
 
 
@@ -71,13 +85,11 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 	// weights : dC/dw = (dz/dw)*(da/dz)/(dC/da)
 	// biases : dC/db = (dz/db)*(da/dz)/(dC/da)
 
-	// dSigmoid
-	Matrice* sigmoid_primed_mat = dSigmoid(final_outputs);
 
-	//dRelu
-	// Matrice* relu_primed_mat = dRelu(final_outputs);
+	//dSOFTMAX
+	Matrice* softmax_primed_mat = dSoftmax(final_outputs);
 
-	Matrice* multiplied_mat = mult(output_errors, sigmoid_primed_mat);
+	Matrice* multiplied_mat = mult(output_errors, softmax_primed_mat);
 
 	// Adjusting Biases
 	Matrice* scaled_bias_mat = scale(net->LR, multiplied_mat);
@@ -99,7 +111,7 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 
 	
 	// Free les Matrices pour les utiliser dans la prochaine etape
-	free_mat(sigmoid_primed_mat);
+	free_mat(softmax_primed_mat);
 	free_mat(multiplied_mat);
 	free_mat(transposed_mat);
 	free_mat(dot_mat);
@@ -112,14 +124,23 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 	// Adjusting weights and biases for the hidden layer	
 	// weights : dC/dw = (dz/dw)*(da/dz)/(dC/da)
 	// biases : dC/db = (dz/db)*(da/dz)/(dC/da)
+    Matrice* sigmoid_primed_mat;
+	Matrice* relu_primed_mat;
 
+    if (i==0)
+	{
+		//dSigmoid
+	    sigmoid_primed_mat = dSigmoid(hidden_outputs);
+		multiplied_mat = mult(hidden_errors, sigmoid_primed_mat);
+	}
+	else {
+     	//dRelu
+	    relu_primed_mat = dRelu(hidden_outputs);
+		multiplied_mat = mult(hidden_errors, relu_primed_mat);
+	}
 	
-	//dSigmoid
-	sigmoid_primed_mat = dSigmoid(hidden_outputs);
+	
 
-	//dRelu
-	// relu_primed_mat = dRelu(hidden_outputs);
-	multiplied_mat = mult(hidden_errors, sigmoid_primed_mat);
 
 	// Adjusting Biases
 	scaled_bias_mat = scale(net->LR, multiplied_mat);
@@ -141,15 +162,20 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 
 
 	// Free les matrices
-	free_mat(sigmoid_primed_mat);
+	if(i==0) free_mat(sigmoid_primed_mat);
+	else free_mat(relu_primed_mat);
+	
 	free_mat(multiplied_mat);
 	free_mat(transposed_mat);
 	free_mat(dot_mat);
 	free_mat(scaled_mat);
 	free_mat(scaled_bias_mat);
-
-	// free_mat(hidden_relu_vec);
-	// free_mat(output_relu_vec);
+    
+	if(i==1){
+		free_mat(hidden_relu_vec);
+	    free_mat(output_relu_vec);
+	}
+	
 
 
 	free_mat(hidden_inputs);
@@ -166,7 +192,7 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 
 
 
-void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size)
+void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size,int choix)
 {
 	
 	for (int i =0; i < size; i++)
@@ -186,7 +212,7 @@ void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int 
 		Matrice* output = create_mat(OUTPUT_SIZE, 1);  //OUTPUT_SIZE = 10 (CONST)
 		output->data[index] = 1.0; // Setting the result
 
-		train_network(net, IMG, output);
+		train_network(net, IMG, output,choix);
 
 		free_mat(IMG);
 		free_mat(output);
@@ -199,7 +225,7 @@ void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int 
 
 
 
-void train_batch_imgs_epochs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size)
+void train_batch_imgs_epochs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size,int choix)
 {
 	int epoch = 100;
 	int epochs = size / epoch;
@@ -218,7 +244,7 @@ void train_batch_imgs_epochs(NeuralNetwork* net, uint8_t* images, uint8_t* label
 
 	for (int j = 1; j <= epochs; j++)
 	{
-		NET_RATE = predict_rate_network(net, test_images, test_labels, 1000);
+		NET_RATE = predict_rate_network(net, test_images, test_labels, 1000,choix);
 		printf("%1.6f\n", NET_RATE);
 		printf("%d; ",j);
 		for (int i =(j-1)*epoch; i < j*epoch; i++)
@@ -235,7 +261,7 @@ void train_batch_imgs_epochs(NeuralNetwork* net, uint8_t* images, uint8_t* label
 		Matrice* output = create_mat(OUTPUT_SIZE, 1);  //OUTPUT_SIZE = 1 (CONST)
 		output->data[index] = 1.0; // Setting the result
 
-		train_network(net, IMG, output);
+		train_network(net, IMG, output,choix);
 
 		free_mat(IMG);
 		free_mat(output);
@@ -252,34 +278,50 @@ void train_batch_imgs_epochs(NeuralNetwork* net, uint8_t* images, uint8_t* label
 
 
 
-Matrice* predict_network(NeuralNetwork* net, Matrice* IMG) {
+Matrice* predict_network(NeuralNetwork* net, Matrice* IMG,int i) {
 	
 	//Appliquer propagation sur l'image
 	Matrice* hidden_inputs	= dotprod(net->hidden_weights, IMG);
 	Matrice* z_hidden = add(hidden_inputs, net->hidden_bias);
-
-	//Sigmoid
-	Matrice* hidden_outputs = apply(sigmoid, z_hidden);
-	
-	//Relu
-	// Matrice* hidden_relu_vec = apply(relu, z_hidden);
-	// Matrice* hidden_outputs = scale((1.0/mat_max(z_hidden)), hidden_relu_vec);
+	Matrice* hidden_outputs;
+    
+	  if (i==0)
+	{
+		//Sigmoid
+	    hidden_outputs = apply(sigmoid, z_hidden);
+	}
+	else {
+     	//Relu
+	    Matrice* hidden_relu_vec = apply(relu, z_hidden);
+	    hidden_outputs = scale((1.0/mat_max(z_hidden)), hidden_relu_vec);
+	}
 
 	Matrice* final_inputs = dotprod(net->output_weights, hidden_outputs);
 	Matrice* z_output = add(final_inputs, net->output_bias);
+	
+	Matrice* final_outputs;
+	// Matrice* output_relu_vec;
+    // if (i==0)
+	// {
+	// 	//Sigmoid
+	//     final_outputs = apply(sigmoid, z_output);
+	// }
+	// else {
+    //  	//Relu
+	//     output_relu_vec = apply(relu, z_output);
+	//     final_outputs = scale((1.0/mat_max(z_output)), output_relu_vec);
+	
+	// }
+	
 
-	//Sigmoid
-	Matrice* final_outputs = apply(sigmoid, z_output);
-
-	//Relu
-	// Matrice* output_relu_vec = apply(relu, z_output);
-	// Matrice* final_outputs = scale((1.0/mat_max(z_output)), output_relu_vec);
+	//Softmax
+	final_outputs = softmax(z_output);
 	
 	return final_outputs;
 }
 
 
-double predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size) {
+double predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size,int choix) {
 	int img_correct = 0;
 	// printf("\n***********************************\n");
 
@@ -294,7 +336,7 @@ double predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels
 
 	    int index = *(labels + i);		// recuperer le vrai label de l'image de test
 
-		Matrice* prediction = predict_network(net, IMG); // la couche de sortie evaluée par notre reseau pour une image de test
+		Matrice* prediction = predict_network(net, IMG,choix); // la couche de sortie evaluée par notre reseau pour une image de test
 		
 		if (mat_argmax(prediction) == index) {
 		

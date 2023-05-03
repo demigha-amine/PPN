@@ -1,46 +1,84 @@
 #include "Neural_Network.h"
+
 #include <time.h>
 
 
-#define size_train 8000
-#define OFFSET 8000
+#define MAX_SIZE 0
+#define LEARNING_RATE 0.1
 
 
+int main(int argc, char **argv) {
 
-int main(void) {
+	if (argc != 4) {
+        fprintf(stderr, "Error! Expecting :    ./exe	Training size	Hidden Nodes	Test Offset\n");
+        return 1;
+    }
 
-    NeuralNetwork* net = create_network(IMAGE_SIZE, HIDDEN_NODES, OUTPUT_SIZE, LEARNING_RATE); 
-	affiche_network(net);
+	int size = atoi(argv[1]);
+	int HIDDEN_NODES = atoi(argv[2]);
+	int test_offset = atoi(argv[3]);
 
-    // LES IMAGES D'ENTRAINEMENT
+	//CREATE NETWORK
+
+    NeuralNetwork* net = create_network(IMAGE_SIZE, HIDDEN_NODES, OUTPUT_SIZE, LEARNING_RATE);
+  
+
+
 	FILE* imageFile = fopen("../mnist_reader/mnist/train-images-idx3-ubyte", "r");
 	FILE* labelFile = fopen("../mnist_reader/mnist/train-labels-idx1-ubyte", "r");
 
-	// Read size images from the OFFSET
-	uint8_t* images = readMnistImages(imageFile, OFFSET, size_train);
-	uint8_t* labels = readMnistLabels(labelFile, OFFSET, size_train);
+	// Read size images from the MAX_SIZE images
+	uint8_t* images = readMnistImages(imageFile, MAX_SIZE, size);
+	uint8_t* labels = readMnistLabels(labelFile, MAX_SIZE, size);
 
 
 	fclose(imageFile);
 	fclose(labelFile);
-	
-	printf("\n*********Debut d'entrainement*******************\n");
 
-	//calculer le temps d'entrainements
-    clock_t t = clock();
-	train_batch_imgs(net,images,labels,size_train);
-	clock_t r = clock();
 
-	printf("Temps d'entrainement = %f\n", (double)(r-t)/CLOCKS_PER_SEC);
+	// 1 TRAINING
 
-	printf("\n*********Fin d'entrainement*******************\n");
-    
-	//sauvgarder les resultats de tests dans des fichiers
+	clock_t trainin_begin = clock();
+	train_batch_imgs(net,images,labels,size,1);
+	clock_t trainin_end = clock();
+
 	save_mat(net->hidden_weights,"hidden_w");
 	save_mat(net->output_weights,"output_w");
 	save_mat(net->hidden_bias,"hidden_b");
 	save_mat(net->output_bias,"output_b");
-	
+
+	// TRAINING TIME
+  	double training_delta = (double) (trainin_end - trainin_begin) / CLOCKS_PER_SEC;
+  	
+
+	// 2 TESTING
+
+	imageFile = fopen("../mnist_reader/mnist/t10k-images-idx3-ubyte", "r");
+	labelFile = fopen("../mnist_reader/mnist/t10k-labels-idx1-ubyte", "r");
+
+	// Read size images from the MAX_SIZE images
+	images = readMnistImages(imageFile, test_offset, 1000);
+	labels = readMnistLabels(labelFile, test_offset, 1000);
+
+
+	fclose(imageFile);
+	fclose(labelFile);
+
+
+    
+	double NET_RATE = predict_rate_network(net, images, labels, 1000,1);
+
+
+	// TRAINING DATASET & HIDDEN NODES PERFORMANCE
+
+	printf("%d; %d; %f; %1.6f\n",
+	 size,
+	 HIDDEN_NODES,
+	 training_delta,
+	 NET_RATE);
+
+
 	free_network(net);
     
+	
 }
