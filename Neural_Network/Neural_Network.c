@@ -203,7 +203,6 @@ void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int 
 		for (int k=0,j = i * IMAGE_SIZE; j < (i+1) * IMAGE_SIZE; j++,k++)
 		{   
 			IMG->data[k] = (double)images[j]/255;
-
 		}
 
 	    
