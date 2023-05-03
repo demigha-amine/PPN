@@ -1,11 +1,11 @@
-#include "Neural_Network.h"
+#include "Neural_Network_2.h"
 
 #include <time.h>
 
 
 #define MAX_SIZE 0
 #define LEARNING_RATE 0.1
-
+#define choix 1
 
 int main(int argc, char **argv) {
 
@@ -39,19 +39,22 @@ int main(int argc, char **argv) {
 	// 1 TRAINING
 
 	clock_t trainin_begin = clock();
-	train_batch_imgs(net,images,labels,size,1);
+	train_batch_imgs(net,images,labels,size,choix);
 	clock_t trainin_end = clock();
 
 	save_mat(net->hidden_weights,"hidden_w");
+	save_mat(net->hidden_weights_2,"hidden2_w");
 	save_mat(net->output_weights,"output_w");
+	
 	save_mat(net->hidden_bias,"hidden_b");
+	save_mat(net->hidden_bias_2,"hidden2_b");
 	save_mat(net->output_bias,"output_b");
 
 	// TRAINING TIME
   	double training_delta = (double) (trainin_end - trainin_begin) / CLOCKS_PER_SEC;
   	
 
-	// 2 TESTING
+	// // 2 TESTING
 
 	imageFile = fopen("../mnist_reader/mnist/t10k-images-idx3-ubyte", "r");
 	labelFile = fopen("../mnist_reader/mnist/t10k-labels-idx1-ubyte", "r");
@@ -66,7 +69,7 @@ int main(int argc, char **argv) {
 
 
     
-	double NET_RATE = predict_rate_network(net, images, labels, 1000,1);
+	double NET_RATE = predict_rate_network(net, images, labels, 1000,choix);
 
 
 	// TRAINING DATASET & HIDDEN NODES PERFORMANCE
