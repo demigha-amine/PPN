@@ -1,9 +1,13 @@
 set terminal png size 1000,600
-set xlabel "Number of Nodes" font ",15"
+set xlabel "Test Offset" font ",15"
 set ylabel "Network Predict(%)" font ",15"
-set yrange [70:100]
+set yrange [80:100]
+set auto x
+set grid
+set key left
+set key box
 set title "Sigmoid vs ReLu" font ",15"
 set output "sig_relu.png"
 set style data linespoints
-plot "relu_performance.csv" using 4:xtic(2) smooth bezier title "ReLu" lt rgb "blue", "sigmoid_performance.csv" using 4:xtic(2) smooth bezier title "Sigmoid" lt rgb "green"
+plot "Relu_60k_offset_performance.csv" using 3:4 title "ReLu" lt rgb "blue", "Relu+Softmax_60k_offset_performance.csv" using 3:4 title "ReLu + Softmax" lt rgb "green", "Sigmoid_60k_offset_performance.csv" using 3:4 title "Sigmoid" lt rgb "red", "Sigmoid+Softmax_60k_offset_performance.csv" using 3:4 title "Sigmoid + Softmax" lt rgb "yellow"
 
