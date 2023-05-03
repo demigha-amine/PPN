@@ -1,10 +1,11 @@
-#include "./Neural_Network/Neural_Network.h"
+#include "./Neural_Network/Neural_Network_2.h"
+
 #include <time.h>
 
 
-#define MAX_SIZE 8000
+#define MAX_SIZE 0
 #define LEARNING_RATE 0.1
-
+#define choix 1
 
 int main(int argc, char **argv) {
 
@@ -20,8 +21,13 @@ int main(int argc, char **argv) {
 	//CREATE NETWORK
 
     NeuralNetwork* net = create_network(IMAGE_SIZE, HIDDEN_NODES, OUTPUT_SIZE, LEARNING_RATE);
-  
-
+	
+    net->hidden_weights = charger_mat("./Neural_Network/hidden_w");
+	net->hidden_weights_2 = charger_mat("./Neural_Network/hidden2_w");
+	net->hidden_bias = charger_mat("./Neural_Network/hidden_b");
+	net->hidden_bias_2 = charger_mat("./Neural_Network/hidden2_b");
+	net->output_weights = charger_mat("./Neural_Network/output_w");
+	net->output_bias = charger_mat("./Neural_Network/output_b");
 
 	FILE* imageFile = fopen("./mnist_reader/mnist/train-images-idx3-ubyte", "r");
 	FILE* labelFile = fopen("./mnist_reader/mnist/train-labels-idx1-ubyte", "r");
@@ -38,9 +44,9 @@ int main(int argc, char **argv) {
 	// 1 TRAINING
 
 	clock_t trainin_begin = clock();
-	train_batch_imgs(net,images,labels,size);
+	train_batch_imgs(net,images,labels,size,choix);
 	clock_t trainin_end = clock();
-
+    
 
 	// TRAINING TIME
   	double training_delta = (double) (trainin_end - trainin_begin) / CLOCKS_PER_SEC;
@@ -61,7 +67,7 @@ int main(int argc, char **argv) {
 
 
     
-	double NET_RATE = predict_rate_network(net, images, labels, 3000);
+	double NET_RATE = predict_rate_network(net, images, labels, 3000,choix);
 
 	
 	// TRAINING DATASET & HIDDEN NODES PERFORMANCE
