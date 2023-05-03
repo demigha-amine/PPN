@@ -16,6 +16,9 @@ Matrice* dSigmoid(Matrice* m);
 // Softmax probabilite fonction
 Matrice* softmax(Matrice* m);
 
+// Derive de Softmax
+Matrice* dSoftmax(Matrice* m);
+
 // Weights fonction
 double init_weight();
 

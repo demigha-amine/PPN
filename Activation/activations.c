@@ -49,7 +49,22 @@ Matrice* softmax(Matrice* m) {
 	return mat;
 }
 
-
+Matrice* dSoftmax(Matrice* m) {
+    Matrice* mat = create_mat(m->row, m->col);
+    double sum = 0;
+    for (int i = 0; i < m->row; i++) {
+        for (int j = 0; j < m->col; j++) {
+            sum += exp(m->data[i * m->col + j]);
+        }
+    }
+    for (int i = 0; i < m->row; i++) {
+        for (int j = 0; j < m->col; j++) {
+            double s = exp(m->data[i * m->col + j]) / sum;
+            mat->data[i * m->col + j] = s * (1 - s);
+        }
+    }
+    return mat;
+}
 
 double init_weight() { 
 	return ((1.0 * rand()) / (RAND_MAX /2)) - 1;  //des chiffres [-1 , 1]
