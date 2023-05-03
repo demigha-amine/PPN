@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "Neural_Network_2.h"
 
-
+#define MAX_SIZE 8000
 
 NeuralNetwork* create_network(int input, int hidden, int output, double lr) {
 
@@ -10,17 +10,17 @@ NeuralNetwork* create_network(int input, int hidden, int output, double lr) {
 
 	network->Num_Inputs = input;
 	network->Num_Hidden = hidden;
-	network->Num_Hidden_2 = hidden/2;	//
+	network->Num_Hidden_2 = hidden/5;	//
 	network->Num_Outputs = output;
 	network->LR = lr;
 	
 	network->hidden_weights = create_mat(hidden, input);
-	network->hidden_weights_2 = create_mat(hidden/2, hidden);	//
-	network->output_weights = create_mat(output, hidden/2);
+	network->hidden_weights_2 = create_mat(hidden/5, hidden);	//
+	network->output_weights = create_mat(output, hidden/5);
 
 
 	network->hidden_bias = create_mat(hidden,1);
-	network->hidden_bias_2 = create_mat(hidden/2,1);	//
+	network->hidden_bias_2 = create_mat(hidden/5,1);	//
 	network->output_bias = create_mat(output,1);
 
 
@@ -38,35 +38,58 @@ NeuralNetwork* create_network(int input, int hidden, int output, double lr) {
 
 
 
-void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data) {
+void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data,int i) {
 
 	// 1ere Etape (Hidden Layer 1)
 	
 	Matrice* hidden_inputs	= dotprod(net->hidden_weights, input_data);
 	
-
+	
 	Matrice* z_hidden = add(hidden_inputs, net->hidden_bias);
-
-	Matrice* hidden_outputs = apply(sigmoid, z_hidden);
-
+    
+	Matrice* hidden_outputs;
+	Matrice* hidden_relu_vec;
+    if (i==0)
+	{
+		//Sigmoid
+	    hidden_outputs = apply(sigmoid, z_hidden);
+	}
+	else {
+     	// RELU
+	    hidden_relu_vec = apply(relu, z_hidden);
+	    hidden_outputs = scale((1.0/mat_max(z_hidden)), hidden_relu_vec);
+	}
+	
 
 	// 2eme Etape (Hidden Layer 2)
 
-	Matrice* hidden_inputs_2	= dotprod(net->hidden_weights_2, hidden_outputs);
+	Matrice* hidden_inputs_2 = dotprod(net->hidden_weights_2, hidden_outputs);
 
 	Matrice* z_hidden_2 = add(hidden_inputs_2, net->hidden_bias_2);
 
-	Matrice* hidden_outputs_2 = apply(sigmoid, z_hidden_2);
+    Matrice* hidden_outputs_2;
+	Matrice* hidden_relu_vec_2;
+	
+	if (i==0)
+	{
+		//Sigmoid
+	    hidden_outputs_2 = apply(sigmoid, z_hidden_2);
+	}
+	else {
+   		// RELU
+		hidden_relu_vec_2 = apply(relu, z_hidden_2);
+		hidden_outputs_2 = scale((1.0/mat_max(z_hidden_2)), hidden_relu_vec_2);
+	}
 
-	
-	
+
 
 	// 3eme Etape (Output Layer)
 	Matrice* final_inputs = dotprod(net->output_weights, hidden_outputs_2);
 
 	Matrice* z_output = add(final_inputs, net->output_bias);
 
-	Matrice* final_outputs = apply(sigmoid, z_output);
+	//SoftMAX
+	Matrice* final_outputs = softmax(z_output);
 
 	
 
@@ -83,10 +106,11 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 	// Adjusting weights for the output layer	
 	// weights : dC/dw = (dz/dw)*(da/dz)/(dC/da)
 
+	//dSOFTMAX
+	Matrice* softmax_primed_mat = dSoftmax(final_outputs);
 
 
-	Matrice* sigmoid_primed_mat = dSigmoid(final_outputs);
-	Matrice* multiplied_mat = mult(output_errors, sigmoid_primed_mat);
+	Matrice* multiplied_mat = mult(output_errors, softmax_primed_mat);
 
 	//
 	Matrice* scaled_bias_mat = scale(net->LR, multiplied_mat);
@@ -109,7 +133,7 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 	free_mat(net->output_weights);			 // free the old output weights matrix before replacing
 	net->output_weights = added_mat;		// Remplacement par la matrice correcte
 
-	free_mat(sigmoid_primed_mat);
+	free_mat(softmax_primed_mat);
 	free_mat(multiplied_mat);
 	free_mat(transposed_mat);
 	free_mat(dot_mat);
@@ -122,10 +146,21 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 	// // Adjusting weights for the hidden layer 2	
 	// // weights : dC/dw = (dz/dw)*(da/dz)/(dC/da)
 
+    Matrice* relu_primed_mat;
+	Matrice* sigmoid_primed_mat;
+	if (i==0)
+	{
+		//dSigmoid
+	    sigmoid_primed_mat = dSigmoid(hidden_outputs_2);
+		multiplied_mat = mult(hidden_errors, sigmoid_primed_mat);
+	}
+	else {	
+		//dRelu
+		relu_primed_mat = dRelu(hidden_outputs_2);
+		multiplied_mat = mult(hidden_errors, relu_primed_mat);
+	}
 	
 	
-	sigmoid_primed_mat = dSigmoid(hidden_outputs_2);
-	multiplied_mat = mult(hidden_errors, sigmoid_primed_mat);
 
 
 	//
@@ -150,7 +185,9 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 	free_mat(net->hidden_weights_2); 				// free the old hidden weights matrix before replacing
 	net->hidden_weights_2 = added_mat; 			// Remplacement par la matrice correcte
 
-	free_mat(sigmoid_primed_mat);
+	if (i==0) free_mat(sigmoid_primed_mat);
+	else	free_mat(relu_primed_mat);
+	
 	free_mat(multiplied_mat);
 	free_mat(transposed_mat);
 	free_mat(dot_mat);
@@ -161,11 +198,21 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 	// // Adjusting weights for the hidden layer 1
 	// // weights : dC/dw = (dz/dw)*(da/dz)/(dC/da)
 
+	if (i==0)
+	{
+		//dSigmoid
+	    sigmoid_primed_mat = dSigmoid(hidden_outputs);
+		multiplied_mat = mult(hidden_errors_2, sigmoid_primed_mat);
+	}
+	else {	
+		//dRelu
+		relu_primed_mat = dRelu(hidden_outputs);
+		multiplied_mat = mult(hidden_errors_2, relu_primed_mat);
+	}
 	
 	
-	sigmoid_primed_mat = dSigmoid(hidden_outputs);
 	
-	multiplied_mat = mult(hidden_errors_2, sigmoid_primed_mat);
+	
 	
 	//
 	scaled_bias_mat = scale(net->LR, multiplied_mat);
@@ -187,8 +234,11 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 
 	free_mat(net->hidden_weights); 				// free the old hidden weights matrix before replacing
 	net->hidden_weights = added_mat; 			// Remplacement par la matrice correcte
+    
+	if(i==0) free_mat(sigmoid_primed_mat);
+	else free_mat(relu_primed_mat); 
 
-	free_mat(sigmoid_primed_mat);
+
 	free_mat(multiplied_mat);
 	free_mat(transposed_mat);
 	free_mat(dot_mat);
@@ -204,6 +254,11 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 	free_mat(z_hidden);
 	free_mat(z_output);
 
+    if(i==1){
+		free_mat(hidden_relu_vec);
+		free_mat(hidden_relu_vec_2);
+	}
+
 	free_mat(output_errors);
 	free_mat(hidden_errors);
 }
@@ -212,12 +267,11 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 
 
 
-void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size)
+void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size,int choix)
 {
 	
 	for (int i =0; i < size; i++)
 	{
-
 		Matrice* IMG = create_mat(IMAGE_SIZE,1);  //IMAGE_SIZE = 784 (CONST)
  
 		for (int k=0,j = i * IMAGE_SIZE; j < (i+1) * IMAGE_SIZE; j++,k++)
@@ -232,7 +286,7 @@ void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int 
 		Matrice* output = create_mat(OUTPUT_SIZE, 1);  //OUTPUT_SIZE = 1 (CONST)
 		output->data[index] = 1.0; // Setting the result
 
-		train_network(net, IMG, output);
+		train_network(net, IMG, output,choix);
 
 		free_mat(IMG);
 		free_mat(output);
@@ -245,28 +299,112 @@ void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int 
 
 
 
-Matrice* predict_network(NeuralNetwork* net, Matrice* IMG) {
+void train_batch_imgs_epochs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size,int choix)
+{
+	int epoch = 100;
+	int epochs = size / epoch;
+	double NET_RATE;
+
+	FILE* imageFile = fopen("./mnist_reader/mnist/t10k-images-idx3-ubyte", "r");
+	FILE* labelFile = fopen("./mnist_reader/mnist/t10k-labels-idx1-ubyte", "r");
+
+	// Read size images from the MAX_SIZE images
+	uint8_t* test_images = readMnistImages(imageFile, MAX_SIZE, 1000);
+	uint8_t* test_labels = readMnistLabels(labelFile, MAX_SIZE, 1000);
+
+	
+	fclose(imageFile);
+	fclose(labelFile);
+
+	for (int j = 1; j <= epochs; j++)
+	{
+		NET_RATE = predict_rate_network(net, test_images, test_labels, 1000,choix);
+		printf("%1.6f\n", NET_RATE);
+		printf("%d; ",j);
+		for (int i =(j-1)*epoch; i < j*epoch; i++)
+		{
+		Matrice* IMG = create_mat(IMAGE_SIZE,1);  //IMAGE_SIZE = 784 (CONST)
+ 
+		for (int k=0,j = i * IMAGE_SIZE; j < (i+1) * IMAGE_SIZE; j++,k++)
+		{   
+			IMG->data[k] = (double)images[j]/255;
+
+		}	    
+	    int index = *(labels + i);  //recupere l'indice de label active
+
+		Matrice* output = create_mat(OUTPUT_SIZE, 1);  //OUTPUT_SIZE = 1 (CONST)
+		output->data[index] = 1.0; // Setting the result
+
+		train_network(net, IMG, output,choix);
+
+		free_mat(IMG);
+		free_mat(output);
+		}
+		
+		
+
+		
+	}
+	free(images);
+	free(labels);
+
+}
+
+
+
+Matrice* predict_network(NeuralNetwork* net, Matrice* IMG, int i) {
 	Matrice* hidden_inputs	= dotprod(net->hidden_weights, IMG);
 
 	Matrice* z_hidden = add(hidden_inputs, net->hidden_bias);
-	Matrice* hidden_outputs = apply(sigmoid, z_hidden);
+ 
+    Matrice* hidden_outputs;
+	
+	
+    if (i==0)
+	{
+		//Sigmoid
+	    hidden_outputs = apply(sigmoid, z_hidden);
+	}
+	else {	
+		//Relu
+		Matrice* hidden_relu_vec = apply(relu, z_hidden);
+		hidden_outputs = scale((1.0/mat_max(z_hidden)), hidden_relu_vec);
+	}
+	
 
-	Matrice* hidden_inputs_2	= dotprod(net->hidden_weights_2, hidden_outputs);
+	
+
+	Matrice* hidden_inputs_2 = dotprod(net->hidden_weights_2, hidden_outputs);
 
 	Matrice* z_hidden_2 = add(hidden_inputs_2, net->hidden_bias_2);
-	Matrice* hidden_outputs_2 = apply(sigmoid, z_hidden_2);
+
+    Matrice* hidden_outputs_2;
+	
+	if (i==0)
+	{
+		//Sigmoid
+	    hidden_outputs_2 = apply(sigmoid, z_hidden_2);
+	}
+	else {	
+		//Relu
+	    Matrice* hidden_relu_vec_2 = apply(relu, z_hidden_2);
+	    hidden_outputs_2 = scale((1.0/mat_max(z_hidden_2)), hidden_relu_vec_2);
+	}
+	
 
 	Matrice* final_inputs = dotprod(net->output_weights, hidden_outputs_2);
 
 	Matrice* z_output = add(final_inputs, net->output_bias);
-	Matrice* final_outputs = apply(sigmoid, z_output);
+
+	//Softmax
+	Matrice* final_outputs = softmax(z_output);
 
 	return final_outputs;
 }
 
 
 
-double predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size) {
+double predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size,int choix) {
 	int img_correct = 0;
 	for (int i = 0; i < size; i++) {
 		Matrice* IMG = create_mat(IMAGE_SIZE,1);  //IMAGE_SIZE = 784 (CONST)
@@ -278,7 +416,7 @@ double predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels
 		}
 	    int index = *(labels + i);
 
-		Matrice* prediction = predict_network(net, IMG);
+		Matrice* prediction = predict_network(net, IMG,choix);
 		// affiche_mat(prediction);
 		if (mat_argmax(prediction) == index) {
 			img_correct++;

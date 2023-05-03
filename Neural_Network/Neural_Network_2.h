@@ -6,6 +6,8 @@
 
 #define IMAGE_SIZE 784
 #define OUTPUT_SIZE 10
+#define LEARNING_RATE 0.1
+
 
 
 typedef struct {
@@ -33,17 +35,19 @@ typedef struct {
 NeuralNetwork* create_network(int input, int hidden, int output, double lr);
 
 // Fonction pour entrainer le reseau de neurones
-void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data);
+void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data,int choix_activation);
 
 // Fonction pour entrainer ensemble des images
-void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size);
+void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size, int choix_activation);
 
+// Fonction pour entrainer le reseau en utilisant Basic SGD Algo
+void train_batch_imgs_epochs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size, int choix);
 
 // Fonction de prediction d'une image par notre reseau
-Matrice* predict_network(NeuralNetwork* net, Matrice* IMG);
+Matrice* predict_network(NeuralNetwork* net, Matrice* IMG,int choix_activation);
 
 // Fonction qui retourne le pourcentage des images correctes par notre reseau 
-double predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size);
+double predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size,int choix);
 
 // Fonction qui affiche les informations d'un reseau de neuron
 void affiche_network(NeuralNetwork* net);
