@@ -1,4 +1,4 @@
-CC=gcc -fopenmp
+CC=gcc
 
 CFLAGS=-g -Wall
 
