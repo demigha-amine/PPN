@@ -269,7 +269,7 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 
 void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size,int choix)
 {
-	
+	#pragma omp parallel for
 	for (int i =0; i < size; i++)
 	{
 		Matrice* IMG = create_mat(IMAGE_SIZE,1);  //IMAGE_SIZE = 784 (CONST)
@@ -324,7 +324,8 @@ void train_batch_imgs_epochs(NeuralNetwork* net, uint8_t* images, uint8_t* label
 		for (int i =(j-1)*epoch; i < j*epoch; i++)
 		{
 		Matrice* IMG = create_mat(IMAGE_SIZE,1);  //IMAGE_SIZE = 784 (CONST)
- 
+        
+		//#pragma omp parallel for schedule(dynamic)
 		for (int k=0,j = i * IMAGE_SIZE; j < (i+1) * IMAGE_SIZE; j++,k++)
 		{   
 			IMG->data[k] = (double)images[j]/255;
@@ -406,6 +407,8 @@ Matrice* predict_network(NeuralNetwork* net, Matrice* IMG, int i) {
 
 double predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size,int choix) {
 	int img_correct = 0;
+
+	 #pragma omp parallel for reduction(+:img_correct)
 	for (int i = 0; i < size; i++) {
 		Matrice* IMG = create_mat(IMAGE_SIZE,1);  //IMAGE_SIZE = 784 (CONST)
  

@@ -1,4 +1,5 @@
 #pragma once
+#include <omp.h>
 
 //definition d'une matrice
 typedef struct {
