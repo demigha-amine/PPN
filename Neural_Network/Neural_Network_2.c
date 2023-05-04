@@ -4,7 +4,7 @@
 
 #define MAX_SIZE 8000
 
-NeuralNetwork* create_network(int input, int hidden, int output, double lr) {
+NeuralNetwork* create_network(int input, int hidden, int output, float lr) {
 
 	NeuralNetwork* network = malloc(sizeof(NeuralNetwork));
 
@@ -276,7 +276,7 @@ void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int 
  
 		for (int k=0,j = i * IMAGE_SIZE; j < (i+1) * IMAGE_SIZE; j++,k++)
 		{   
-			IMG->data[k] = (double)images[j]/255;
+			IMG->data[k] = (float)images[j]/255;
 
 		}
 
@@ -303,7 +303,7 @@ void train_batch_imgs_epochs(NeuralNetwork* net, uint8_t* images, uint8_t* label
 {
 	int epoch = 100;
 	int epochs = size / epoch;
-	double NET_RATE;
+	float NET_RATE;
 
 	FILE* imageFile = fopen("./mnist_reader/mnist/t10k-images-idx3-ubyte", "r");
 	FILE* labelFile = fopen("./mnist_reader/mnist/t10k-labels-idx1-ubyte", "r");
@@ -328,7 +328,7 @@ void train_batch_imgs_epochs(NeuralNetwork* net, uint8_t* images, uint8_t* label
 		////#pragma omp parallel for schedule(dynamic)
 		for (int k=0,j = i * IMAGE_SIZE; j < (i+1) * IMAGE_SIZE; j++,k++)
 		{   
-			IMG->data[k] = (double)images[j]/255;
+			IMG->data[k] = (float)images[j]/255;
 
 		}	    
 	    int index = *(labels + i);  //recupere l'indice de label active
@@ -405,7 +405,7 @@ Matrice* predict_network(NeuralNetwork* net, Matrice* IMG, int i) {
 
 
 
-double predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size,int choix) {
+float predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size,int choix) {
 	int img_correct = 0;
 
 	 //#pragma omp parallel for reduction(+:img_correct)
@@ -414,7 +414,7 @@ double predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels
  
 		for (int k=0,j = i * IMAGE_SIZE; j < (i+1) * IMAGE_SIZE; j++,k++)
 		{   
-			IMG->data[k] = (double)images[j]/255;
+			IMG->data[k] = (float)images[j]/255;
 
 		}
 	    int index = *(labels + i);

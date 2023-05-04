@@ -12,7 +12,7 @@ int reverse_int(int i);
 void preprocess_image(uint8_t* image, int rows, int columns, int number_of_images);
 
 //Fonction qui applique le filtre passe-bas sur une image
-void apply_lowpass_filter(uint8_t *image, int rows, int columns, double cutoff_frequency);
+void apply_lowpass_filter(uint8_t *image, int rows, int columns, float cutoff_frequency);
 
 // Read Images from Mnist Data
 void Read_mnist_Imgs(uint8_t* images, FILE* images_file);

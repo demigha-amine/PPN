@@ -18,14 +18,14 @@ void preprocess_image(uint8_t* image, int rows, int columns, int number_of_image
 
     for (int k = 0; k < number_of_images; k++)
     {
-        double sum = 0.0, sum_sq = 0.0;
+        float sum = 0.0, sum_sq = 0.0;
         for(int i=0; i< rows * columns; i++){
             sum += image[i];
             sum_sq += image[i] * image[i];
         }
 
-        double mean = sum / (rows * columns);
-        double std_dev =sqrt(sum_sq / (rows * columns) - mean * mean);
+        float mean = sum / (rows * columns);
+        float std_dev =sqrt(sum_sq / (rows * columns) - mean * mean);
 
         //Centrage et mise à l'échelle des pixels de l'image
 
@@ -41,7 +41,7 @@ void preprocess_image(uint8_t* image, int rows, int columns, int number_of_image
 
 
 //Fonction qui applique le filtre passe-bas sur une image
-void apply_lowpass_filter(uint8_t *image, int rows, int columns,double cutoff_frequency) {
+void apply_lowpass_filter(uint8_t *image, int rows, int columns,float cutoff_frequency) {
     // Calcul du rayon du filtre passe-bas
     int radius = (int)(0.5 * rows * cutoff_frequency);
     
@@ -51,21 +51,21 @@ void apply_lowpass_filter(uint8_t *image, int rows, int columns,double cutoff_fr
     // Parcours de chaque pixel de l'image
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
-            double sum = 0;
-            double count = 0;
+            float sum = 0;
+            float count = 0;
             
             // Parcours de chaque pixel voisin dans le rayon du filtre
             for (int k = i - radius; k <= i + radius; k++) {
                 for (int l = j - radius; l <= j + radius; l++) {
                     if (k >= 0 && k < rows && l >= 0 && l < columns) {
-                        sum += (double)image[k * columns + l];
+                        sum += (float)image[k * columns + l];
                         count += 1;
                     }
                 }
             }
             
             // Calcul de la moyenne des pixels voisins
-            double mean = sum / count;
+            float mean = sum / count;
             
             // Stockage du pixel filtré dans le tampon temporaire
             temp_image[i * columns + j] = (unsigned char)mean;

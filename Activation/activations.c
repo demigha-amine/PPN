@@ -2,7 +2,7 @@
 #include <math.h>
 #include "../Matrix/oper_mat.h"
 
-double relu(double x){
+float relu(float x){
     return (x > 0) ? x : 0;
 }
 
@@ -17,7 +17,7 @@ Matrice* dRelu(Matrice* m) {
     return relu_deriv;
 }
 
-double sigmoid(double x) {
+float sigmoid(float x) {
 	return 1.0 / (1 + exp(-x));
 }
 

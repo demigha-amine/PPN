@@ -48,7 +48,7 @@ int main() {
     // preprocess_image(images, 28, 28, 10000);
 
 
-    double NET_RATE = predict_rate_network(net, images, labels, 10000, 1);
+    float NET_RATE = predict_rate_network(net, images, labels, 10000, 1);
 
 
     printf("%1.6f\n", 

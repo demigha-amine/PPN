@@ -88,7 +88,7 @@ Matrice* sub(Matrice *m1, Matrice *m2) {
 }
 
 
-Matrice* apply(double (*func)(double), Matrice* m) {
+Matrice* apply(float (*func)(float), Matrice* m) {
 	Matrice *mat = copy_mat(m);
 
 	 //#pragma omp parallel for
@@ -100,7 +100,7 @@ Matrice* apply(double (*func)(double), Matrice* m) {
 	return mat;
 }
 
-// Matrice* scale(double n, Matrice* m) {
+// Matrice* scale(float n, Matrice* m) {
 // 	Matrice* mat = copy_mat(m);
 
 // 	 //#pragma omp parallel for
@@ -164,7 +164,7 @@ Matrice* transpose(Matrice* m) {
 // 		//#pragma omp parallel for
 // 		for (int i = 0; i < m1->row; i++) {
 // 			for (int j = 0; j < m2->col; j++) {
-// 				double sum = 0;
+// 				float sum = 0;
 
 // 				//#pragma omp parallel for reduction(+:sum)
 // 				for (int k = 0; k < m2->row; k++) {

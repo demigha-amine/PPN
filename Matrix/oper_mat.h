@@ -17,7 +17,7 @@ Matrice* add(Matrice* m1, Matrice* m2);
 Matrice* sub(Matrice* m1, Matrice* m2);
 
 // Appliquer une fonction sur une matrice
-Matrice* apply(double (*func)(double), Matrice* m);
+Matrice* apply(float (*func)(float), Matrice* m);
 
 // Multiplication d'un scalaire par une matrice
 Matrice* scale(double n, Matrice* m);

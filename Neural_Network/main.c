@@ -21,6 +21,7 @@ int main(int argc, char **argv) {
 	//CREATE NETWORK
 
     NeuralNetwork* net = create_network(IMAGE_SIZE, HIDDEN_NODES, OUTPUT_SIZE, LEARNING_RATE);
+	printf("hhhhh");
   
 
 
@@ -51,7 +52,7 @@ int main(int argc, char **argv) {
 	save_mat(net->output_bias,"output_b");
 
 	// TRAINING TIME
-  	double training_delta = (double) (trainin_end - trainin_begin) / CLOCKS_PER_SEC;
+  	float training_delta = (float) (trainin_end - trainin_begin) / CLOCKS_PER_SEC;
   	
 
 	// // 2 TESTING
@@ -69,7 +70,7 @@ int main(int argc, char **argv) {
 
 
     
-	double NET_RATE = predict_rate_network(net, images, labels, 1000,choix);
+	float NET_RATE = predict_rate_network(net, images, labels, 1000,choix);
 
 
 	// TRAINING DATASET & HIDDEN NODES PERFORMANCE

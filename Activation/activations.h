@@ -2,13 +2,13 @@
 #include <stdlib.h>
 #include "../Matrix/matrice.h"
 // ReLu function
-double relu(double x);
+float relu(float x);
 
 // ReLu derived
 Matrice* dRelu(Matrice* m);
 
 // Sigmoid fonction
-double sigmoid(double x);
+float sigmoid(float x);
 
 // Derive de Sigmoid
 Matrice* dSigmoid(Matrice* m);

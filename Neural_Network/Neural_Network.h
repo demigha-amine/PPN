@@ -14,7 +14,7 @@ typedef struct {
 	int Num_Inputs;		//Nbr des elements d'entrees
 	int Num_Hidden;		//Nbr des noeuds caches
 	int Num_Outputs;	//Nbr des elements de sortie
-	double LR;			//Learning Rate
+	float LR;			//Learning Rate
 
 
 	Matrice* hidden_weights;		// Matrice des weights caches
@@ -26,7 +26,7 @@ typedef struct {
 
 
 // Fonction de creation d'un reseau de neurones
-NeuralNetwork* create_network(int input, int hidden, int output, double lr);
+NeuralNetwork* create_network(int input, int hidden, int output, float lr);
 
 // Fonction pour entrainer le reseau de neurones
 void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data,int choix_activation);
@@ -41,7 +41,7 @@ void train_batch_imgs_epochs(NeuralNetwork* net, uint8_t* images, uint8_t* label
 Matrice* predict_network(NeuralNetwork* net, Matrice* IMG,int choix_activation);
 
 // Fonction qui retourne le pourcentage des images correctes par notre reseau 
-double predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size,int choix);
+float predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size,int choix);
 
 // Fonction qui affiche les informations d'un reseau de neuron
 void affiche_network(NeuralNetwork* net);
