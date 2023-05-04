@@ -38,14 +38,21 @@ void affiche_mat(Matrice* m) {
 	}
 }
 
+// Matrice* copy_mat(Matrice* m) {
+// 	Matrice* mat = create_mat(m->row, m->col);
+// 	for (int i = 0; i < m->row; i++) {
+// 		for (int j = 0; j < m->col; j++) {
+// 			mat->data[i * mat->col + j] = m->data[i * m->col + j];
+// 		}
+// 	}
+// 	return mat;
+// }
+
+
 Matrice* copy_mat(Matrice* m) {
-	Matrice* mat = create_mat(m->row, m->col);
-	for (int i = 0; i < m->row; i++) {
-		for (int j = 0; j < m->col; j++) {
-			mat->data[i * mat->col + j] = m->data[i * m->col + j];
-		}
-	}
-	return mat;
+    Matrice* mat = create_mat(m->row, m->col);
+    cblas_dcopy(m->row * m->col, m->data, 1, mat->data, 1);
+    return mat;
 }
 
 void save_mat(Matrice* m, char* file) {

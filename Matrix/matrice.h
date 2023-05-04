@@ -1,6 +1,6 @@
 #pragma once
 // #include <omp.h>
-
+#include <cblas.h>
 //definition d'une matrice
 typedef struct {
 	double* data; //tableau de donnes
