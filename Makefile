@@ -12,10 +12,10 @@ FILES2=main.c  ./Neural_Network/Neural_Network_2.c ./Matrix/matrice.c ./Matrix/o
 all: exe 2Hidden
 
 exe:
-	$(CC) $(CFLAGS) $(FILES) -lm -o $@
+	$(CC) $(CFLAGS) $(FILES) -lm -lcblas -o $@
 
 2Hidden:
-	$(CC) $(CFLAGS) $(FILES2) -lm -o $@
+	$(CC) $(CFLAGS) $(FILES2) -lm -lcblas -o $@
 
 clean:
 	@rm -Rf exe 2Hidden

@@ -11,7 +11,7 @@ all: prep
 
 
 prep:
-	$(CC) $(CFLAGS) $(FILES3) -lm -o $@
+	$(CC) $(CFLAGS) $(FILES3) -lm -lcblas -o $@
 
 clean:
 	@rm -Rf prep
