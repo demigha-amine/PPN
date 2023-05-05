@@ -21,7 +21,6 @@ int main(int argc, char **argv) {
 	//CREATE NETWORK
 
     NeuralNetwork* net = create_network(IMAGE_SIZE, HIDDEN_NODES, OUTPUT_SIZE, LEARNING_RATE);
-	printf("hhhhh");
   
 
 

@@ -3,7 +3,6 @@
 
 
 
-
 // Verifier les dimensions des matrices
 int check_dimensions(Matrice *m1, Matrice *m2);
 

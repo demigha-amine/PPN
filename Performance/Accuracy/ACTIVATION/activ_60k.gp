@@ -2,7 +2,7 @@ set terminal png size 1000,600
 set title "Activation Functions Performance" font ",13"
 set xlabel "TEST OFFSET" font ",10"
 set ylabel "NETWORK PREDICT (%)" font ",10"
-set auto x
+
 set yrange[50:100]
 set grid
 set key left

@@ -77,6 +77,7 @@ float init_bias() {
 
 
 void Rand_Matrice(Matrice* m) {
+	#pragma omp parallel for
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
 			float w = init_weight();
@@ -86,6 +87,7 @@ void Rand_Matrice(Matrice* m) {
 }
 
 void Rand_Bias(Matrice* m) {
+	#pragma omp parallel for
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
 			float b = init_bias();
