@@ -12,6 +12,8 @@ Matrice* mult(Matrice *m1, Matrice *m2) {
 	if (check_dimensions(m1, m2)) {
 		Matrice *m = create_mat(m1->row, m1->col);
 
+        #pragma omp parallel for
+
 		for (int i = 0; i < m1->row; i++) {
 			for (int j = 0; j < m2->col; j++) {
 				m->data[i * m1->col + j] +=  m1->data[i * m1->col + j] * m2->data[i * m1->col + j];
@@ -88,6 +90,8 @@ Matrice* sub(Matrice *m1, Matrice *m2) {
 Matrice* apply(float (*func)(float), Matrice* m) {
 	Matrice *mat = copy_mat(m);
 
+    #pragma omp parallel for shared(func)
+
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
 			mat->data[i * m->col + j] = (*func)(m->data[i * m->col + j]);
@@ -118,6 +122,8 @@ Matrice* scale(float n, Matrice* m) {
 Matrice* addScalar(float n, Matrice* m) {
 	Matrice* mat = copy_mat(m);
 
+    #pragma omp parallel for shared(n)
+
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
 			mat->data[i * m->col + j] += n;
@@ -128,6 +134,8 @@ Matrice* addScalar(float n, Matrice* m) {
 
 Matrice* transpose(Matrice* m) {
 	Matrice* mat = create_mat(m->col, m->row);
+    
+	#pragma omp parallel for
 
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {

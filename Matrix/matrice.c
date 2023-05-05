@@ -15,6 +15,9 @@ Matrice* create_mat(int row, int col) {
 }
 
 void remplir_mat(Matrice *m, float n) {
+
+	#pragma omp parallel for
+
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
 			m->data[i* m->col + j] = n;
@@ -30,6 +33,9 @@ void free_mat(Matrice *m) {
 
 void affiche_mat(Matrice* m) {
 	printf("Lignes = %d Columns = %d\n", m->row, m->col);
+
+	#pragma omp parallel for
+
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
 			printf("%1.3f ", m->data[i * m->col + j]);
@@ -59,6 +65,9 @@ void save_mat(Matrice* m, char* file) {
 	FILE* fichier = fopen(file, "w");
 	fprintf(fichier, "%d\n", m->row);
 	fprintf(fichier, "%d\n", m->col);
+
+	#pragma omp parallel for
+
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
 			fprintf(fichier, "%.6f\n", m->data[i * m->col + j]);
@@ -78,6 +87,9 @@ Matrice* charger_mat(char* file) {
 	int col = atoi(tab);
 
 	Matrice* m = create_mat(row, col);
+
+	#pragma omp parallel for
+
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
 			fgets(tab, MAX, fichier);
@@ -94,6 +106,9 @@ int mat_argmax(Matrice* m) {
 	// Pour les matrice vecteur (M*1)
 	float max_arg = 0;
 	int max_idx = 0;
+
+	#pragma omp parallel for shared(max_arg,max_idx)
+
 	for (int i = 0; i < m->row; i++) {
 		if (m->data[i] > max_arg) {
 			max_arg = m->data[i];
@@ -107,6 +122,9 @@ int mat_argmax(Matrice* m) {
 float mat_max(Matrice* m) {
 	// Pour les matrice vecteur (M*1)
 	float max_arg = m->data[0];
+
+	#pragma omp parallel for shared(max_arg)
+
 	for (int i = 1; i < m->row; i++) {
 		if (m->data[i] > max_arg) {
 			max_arg = m->data[i];

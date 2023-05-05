@@ -9,6 +9,9 @@ float relu(float x){
 Matrice* dRelu(Matrice* m) {
 	float max = mat_max(m);
     Matrice* relu_deriv = create_mat(m->row, m->col);
+
+	#pragma omp parallel for
+
     for (int i = 0; i < m->row; i++) {
         for (int j = 0; j < m->col; j++) {
             relu_deriv->data[i * m->col + j] = (m->data[i * m->col + j] > 0) ? ((max - m->data[i * m->col + j])/(max*max)) : 0;
@@ -35,12 +38,18 @@ Matrice* dSigmoid(Matrice* m) {
 
 Matrice* softmax(Matrice* m) {
 	float total = 0;
+
+	#pragma omp parallel for reduction(+:total)
+
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
 			total += exp(m->data[i * m->col + j]);
 		}
 	}
 	Matrice* mat = create_mat(m->row, m->col);
+
+	#pragma omp parallel for
+
 	for (int i = 0; i < mat->row; i++) {
 		for (int j = 0; j < mat->col; j++) {
 			mat->data[i * mat->col + j] = exp(m->data[i * m->col + j]) / total;
@@ -52,11 +61,17 @@ Matrice* softmax(Matrice* m) {
 Matrice* dSoftmax(Matrice* m) {
     Matrice* mat = create_mat(m->row, m->col);
     float sum = 0;
+	
+	#pragma omp parallel for reduction(+:sum)
+
     for (int i = 0; i < m->row; i++) {
         for (int j = 0; j < m->col; j++) {
             sum += exp(m->data[i * m->col + j]);
         }
     }
+
+	#pragma omp parallel for
+
     for (int i = 0; i < m->row; i++) {
         for (int j = 0; j < m->col; j++) {
             float s = exp(m->data[i * m->col + j]) / sum;
@@ -77,7 +92,9 @@ float init_bias() {
 
 
 void Rand_Matrice(Matrice* m) {
+
 	#pragma omp parallel for
+
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
 			float w = init_weight();
@@ -87,7 +104,9 @@ void Rand_Matrice(Matrice* m) {
 }
 
 void Rand_Bias(Matrice* m) {
+
 	#pragma omp parallel for
+
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
 			float b = init_bias();

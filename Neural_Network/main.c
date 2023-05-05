@@ -34,7 +34,8 @@ int main(int argc, char **argv) {
 
 	fclose(imageFile);
 	fclose(labelFile);
-
+    
+	
 
 	// 1 TRAINING
 

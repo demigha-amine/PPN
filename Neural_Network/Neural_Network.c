@@ -194,15 +194,19 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 
 void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size,int choix)
 {
-	 //#pragma omp parallel for
+	#pragma omp parallel for shared(net, images, labels, size, choix)
+
 	for (int i =0; i < size; i++)
 	{
 
 		Matrice* IMG = create_mat(IMAGE_SIZE,1);  //IMAGE_SIZE = 784 (CONST)
- 
-		for (int k=0,j = i * IMAGE_SIZE; j < (i+1) * IMAGE_SIZE; j++,k++)
+		int k=0;
+        
+		#pragma omp parallel for shared(IMG, images, k, i)
+		for (int j = i * IMAGE_SIZE; j < (i+1) * IMAGE_SIZE; j++)
 		{   
 			IMG->data[k] = (float)images[j]/255;
+			k++;
 		}
 
 	    
@@ -210,8 +214,12 @@ void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int 
 
 		Matrice* output = create_mat(OUTPUT_SIZE, 1);  //OUTPUT_SIZE = 10 (CONST)
 		output->data[index] = 1.0; // Setting the result
-
-		train_network(net, IMG, output,choix);
+        
+		#pragma omp critical
+		{
+			train_network(net, IMG, output,choix);
+		}
+		
 
 		free_mat(IMG);
 		free_mat(output);
@@ -325,21 +333,29 @@ Matrice* predict_network(NeuralNetwork* net, Matrice* IMG,int i) {
 
 float predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size,int choix) {
 	int img_correct = 0;
-	// printf("\n***********************************\n");
   
-     //#pragma omp parallel for reduction(+:img_correct)
+    #pragma omp parallel for shared(net, images, labels, size, choix)
+
 	for (int i = 0; i < size; i++) {
 		Matrice* IMG = create_mat(IMAGE_SIZE,1);  //IMAGE_SIZE = 784 (CONST)
+		int k=0;
 
-		for (int k=0,j = i * IMAGE_SIZE; j < (i+1) * IMAGE_SIZE; j++,k++)
+		#pragma omp parallel for shared(IMG, images, k, i)
+		for (int j = i * IMAGE_SIZE; j < (i+1) * IMAGE_SIZE; j++)
 		{   
 			IMG->data[k] = (float)images[j]/255;
+			k++;
 
 		}			// recuperer la matrice qui contient les activations de l'image de test
 
 	    int index = *(labels + i);		// recuperer le vrai label de l'image de test
+		Matrice* prediction;
 
-		Matrice* prediction = predict_network(net, IMG,choix); // la couche de sortie evaluée par notre reseau pour une image de test
+		#pragma omp critical
+		{
+			prediction = predict_network(net, IMG,choix); // la couche de sortie evaluée par notre reseau pour une image de test
+
+		}
 		
 		if (mat_argmax(prediction) == index) {
 		
@@ -349,10 +365,7 @@ float predict_rate_network(NeuralNetwork* net, uint8_t* images, uint8_t* labels,
 		free_mat(IMG);
 		free_mat(prediction);
 	}
-		
-	// printf("***********************************\n");
-	// printf("Nombre des predictions correctes est: %d\n",img_correct);
-	// printf("Nombre des predictions incorrectes est: %d\n",(size-img_correct));
+
 
 	return (1.0 * img_correct / size) * 100; //calculer le pourcentage des tests validés
 }
