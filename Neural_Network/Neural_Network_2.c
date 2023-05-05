@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Neural_Network_2.h"
+#include <omp.h>
 
 #define MAX_SIZE 8000
 
@@ -42,8 +43,7 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 
 	// 1ere Etape (Hidden Layer 1)
 	
-	Matrice* hidden_inputs	= dotprod(net->hidden_weights, input_data);
-	
+	Matrice* hidden_inputs	= dotprod(net->hidden_weights, input_data);	
 	
 	Matrice* z_hidden = add(hidden_inputs, net->hidden_bias);
     
@@ -267,35 +267,67 @@ void train_network(NeuralNetwork* net, Matrice* input_data, Matrice* output_data
 
 
 
-void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size,int choix)
-{
-	//#pragma omp parallel for
-	for (int i =0; i < size; i++)
-	{
-		Matrice* IMG = create_mat(IMAGE_SIZE,1);  //IMAGE_SIZE = 784 (CONST)
- 
-		for (int k=0,j = i * IMAGE_SIZE; j < (i+1) * IMAGE_SIZE; j++,k++)
-		{   
-			IMG->data[k] = (float)images[j]/255;
+// void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size,int choix)
+// {
+// 	//#pragma omp parallel for
+// 	for (int i =0; i < size; i++)
+// 	{
+// 		Matrice* IMG = create_mat(IMAGE_SIZE,1);  //IMAGE_SIZE = 784 (CONST)
+// 		int k=0;
 
-		}
-
+//         #pragma omp parallel for
+// 		for (int j = i * IMAGE_SIZE; j < (i+1) * IMAGE_SIZE; j++)
+// 		{   
+// 			IMG->data[k] = (float)images[j]/255;
+// 			k++;
+// 		}
 	    
-	    int index = *(labels + i);  //recupere l'indice de label active
+// 	    int index = *(labels + i);  //recupere l'indice de label active
 
-		Matrice* output = create_mat(OUTPUT_SIZE, 1);  //OUTPUT_SIZE = 1 (CONST)
-		output->data[index] = 1.0; // Setting the result
+// 		Matrice* output = create_mat(OUTPUT_SIZE, 1);  //OUTPUT_SIZE = 1 (CONST)
+// 		output->data[index] = 1.0; // Setting the result
+// 		train_network(net, IMG, output,choix);
 
-		train_network(net, IMG, output,choix);
+// 		free_mat(IMG);
+// 		free_mat(output);
+// 	}
 
-		free_mat(IMG);
-		free_mat(output);
-	}
+// 	free(images);
+// 	free(labels);
 
-	free(images);
-	free(labels);
+// }
+void train_batch_imgs(NeuralNetwork* net, uint8_t* images, uint8_t* labels, int size, int choix)
+{
+    #pragma omp parallel for shared(net, images, labels, size, choix)
+    for (int i = 0; i < size; i++)
+    {
+        Matrice* IMG = create_mat(IMAGE_SIZE, 1);
+        int k = 0;
 
+        #pragma omp parallel for shared(IMG, images, k, i)
+        for (int j = i * IMAGE_SIZE; j < (i + 1) * IMAGE_SIZE; j++)
+        {
+            IMG->data[k] = (float)images[j] / 255;
+            k++;
+        }
+
+        int index = *(labels + i);
+        Matrice* output = create_mat(OUTPUT_SIZE, 1);
+        output->data[index] = 1.0;
+
+        #pragma omp critical
+        {
+            train_network(net, IMG, output, choix);
+        }
+
+        free_mat(IMG);
+        free_mat(output);
+    }
+
+    free(images);
+    free(labels);
 }
+
 
 
 
