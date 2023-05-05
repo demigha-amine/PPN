@@ -48,8 +48,8 @@ Matrice* mult(Matrice *m1, Matrice *m2) {
 Matrice* add(Matrice* m1, Matrice* m2) {
     if (check_dimensions(m1, m2)) {
         Matrice* m = create_mat(m1->row, m1->col);
-        cblas_daxpy(m1->row * m1->col, 1.0, m1->data, 1, m->data, 1);
-        cblas_daxpy(m2->row * m2->col, 1.0, m2->data, 1, m->data, 1);
+        cblas_saxpy(m1->row * m1->col, 1.0, m1->data, 1, m->data, 1);
+        cblas_saxpy(m2->row * m2->col, 1.0, m2->data, 1, m->data, 1);
         return m;
     } else {
         printf("Dimension mismatch add: %dx%d %dx%d\n", m1->row, m1->col, m2->row, m2->col);
@@ -78,8 +78,8 @@ Matrice* add(Matrice* m1, Matrice* m2) {
 Matrice* sub(Matrice *m1, Matrice *m2) {
     if (check_dimensions(m1, m2)) {
         Matrice *m = create_mat(m1->row, m1->col);
-        cblas_dcopy(m1->row*m1->col, m1->data, 1, m->data, 1);
-        cblas_daxpy(m2->row*m2->col, -1.0, m2->data, 1, m->data, 1);
+        cblas_scopy(m1->row*m1->col, m1->data, 1, m->data, 1);
+        cblas_saxpy(m2->row*m2->col, -1.0, m2->data, 1, m->data, 1);
         return m;
     } else {
         printf("Dimension mistmatch sub: %dx%d %dx%d\n", m1->row, m1->col, m2->row, m2->col);
@@ -112,15 +112,15 @@ Matrice* apply(float (*func)(float), Matrice* m) {
 // 	return mat;
 // }
 
-Matrice* scale(double n, Matrice* m) {
+Matrice* scale(float n, Matrice* m) {
     Matrice* mat = create_mat(m->row, m->col);
-    cblas_dcopy(m->row * m->col, m->data, 1, mat->data, 1);
-    cblas_dscal(m->row * m->col, n, mat->data, 1);
+    cblas_scopy(m->row * m->col, m->data, 1, mat->data, 1);
+    cblas_sscal(m->row * m->col, n, mat->data, 1);
     return mat;
 }
 
 
-Matrice* addScalar(double n, Matrice* m) {
+Matrice* addScalar(float n, Matrice* m) {
 	Matrice* mat = copy_mat(m);
 
 	 //#pragma omp parallel for
@@ -184,7 +184,7 @@ Matrice* transpose(Matrice* m) {
 Matrice* dotprod(Matrice* m1, Matrice* m2) {
     if (m1->col == m2->row) {
         Matrice* m = create_mat(m1->row, m2->col);
-        cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, m1->row, m2->col, m1->col, 1.0, m1->data, m1->col, m2->data, m2->col, 0.0, m->data, m->col);
+        cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, m1->row, m2->col, m1->col, 1.0, m1->data, m1->col, m2->data, m2->col, 0.0, m->data, m->col);
         return m;
     } else {
         printf("Dimension mismatch dot: %dx%d %dx%d\n", m1->row, m1->col, m2->row, m2->col);

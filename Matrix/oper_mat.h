@@ -20,10 +20,10 @@ Matrice* sub(Matrice* m1, Matrice* m2);
 Matrice* apply(float (*func)(float), Matrice* m);
 
 // Multiplication d'un scalaire par une matrice
-Matrice* scale(double n, Matrice* m);
+Matrice* scale(float n, Matrice* m);
 
 // Scalaire + Matrice
-Matrice* addScalar(double n, Matrice* m);
+Matrice* addScalar(float n, Matrice* m);
 
 // Transposé d'une matrice
 Matrice* transpose(Matrice* m);

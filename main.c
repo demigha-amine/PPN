@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
     
 
 	// TRAINING TIME
-  	// double training_delta = (double) (trainin_end - trainin_begin) / CLOCKS_PER_SEC;
+  	// float training_delta = (float) (trainin_end - trainin_begin) / CLOCKS_PER_SEC;
   	
 
 	// 2 TESTING
@@ -81,7 +81,7 @@ int main(int argc, char **argv) {
 
 
     
-	double NET_RATE = predict_rate_network(net, images, labels, test_size, choix);
+	float NET_RATE = predict_rate_network(net, images, labels, test_size, choix);
 
 	
 	// TRAINING DATASET & HIDDEN NODES PERFORMANCE

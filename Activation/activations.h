@@ -20,10 +20,10 @@ Matrice* softmax(Matrice* m);
 Matrice* dSoftmax(Matrice* m);
 
 // Weights fonction
-double init_weight();
+float init_weight();
 
 // Bias fonction
-double init_bias();
+float init_bias();
 
 // Creation d'une matrice random
 void Rand_Matrice(Matrice* m);

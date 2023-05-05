@@ -10,11 +10,11 @@ Matrice* create_mat(int row, int col) {
 	matrice->row = row;
 	matrice->col = col;
     matrice->size = row * col ;
-    matrice->data = (double*) calloc((row*col) , sizeof(double));
+    matrice->data = (float*) calloc((row*col) , sizeof(float));
 	return matrice;
 }
 
-void remplir_mat(Matrice *m, double n) {
+void remplir_mat(Matrice *m, float n) {
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
 			m->data[i* m->col + j] = n;
@@ -51,7 +51,7 @@ void affiche_mat(Matrice* m) {
 
 Matrice* copy_mat(Matrice* m) {
     Matrice* mat = create_mat(m->row, m->col);
-    cblas_dcopy(m->row * m->col, m->data, 1, mat->data, 1);
+    cblas_scopy(m->row * m->col, m->data, 1, mat->data, 1);
     return mat;
 }
 
@@ -92,7 +92,7 @@ Matrice* charger_mat(char* file) {
 
 int mat_argmax(Matrice* m) {
 	// Pour les matrice vecteur (M*1)
-	double max_arg = 0;
+	float max_arg = 0;
 	int max_idx = 0;
 	for (int i = 0; i < m->row; i++) {
 		if (m->data[i] > max_arg) {
@@ -104,9 +104,9 @@ int mat_argmax(Matrice* m) {
 }
 
 
-double mat_max(Matrice* m) {
+float mat_max(Matrice* m) {
 	// Pour les matrice vecteur (M*1)
-	double max_arg = m->data[0];
+	float max_arg = m->data[0];
 	for (int i = 1; i < m->row; i++) {
 		if (m->data[i] > max_arg) {
 			max_arg = m->data[i];

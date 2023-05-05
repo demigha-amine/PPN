@@ -3,7 +3,7 @@
 #include <cblas.h>
 //definition d'une matrice
 typedef struct {
-	double* data; //tableau de donnes
+	float* data; //tableau de donnes
 	int row; //nbr de lignes
 	int col; //nbr de colonnes
 	int size; //taille de tableau matrice taille = row * col
@@ -14,7 +14,7 @@ Matrice* create_mat(int row, int col);
 
 
 //remplire la matrice
-void remplir_mat(Matrice *m, double n);
+void remplir_mat(Matrice *m, float n);
 
 //liberer la matrice
 void free_mat(Matrice *m);
@@ -35,6 +35,6 @@ Matrice* charger_mat(char* fichier);
 int mat_argmax(Matrice* m);
 
 // trouver l'argument maximale de la matrice
-double mat_max(Matrice* m);
+float mat_max(Matrice* m);
 
 

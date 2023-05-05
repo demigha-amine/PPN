@@ -7,7 +7,7 @@ float relu(float x){
 }
 
 Matrice* dRelu(Matrice* m) {
-	double max = mat_max(m);
+	float max = mat_max(m);
     Matrice* relu_deriv = create_mat(m->row, m->col);
     for (int i = 0; i < m->row; i++) {
         for (int j = 0; j < m->col; j++) {
@@ -34,7 +34,7 @@ Matrice* dSigmoid(Matrice* m) {
 }
 
 Matrice* softmax(Matrice* m) {
-	double total = 0;
+	float total = 0;
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
 			total += exp(m->data[i * m->col + j]);
@@ -51,7 +51,7 @@ Matrice* softmax(Matrice* m) {
 
 Matrice* dSoftmax(Matrice* m) {
     Matrice* mat = create_mat(m->row, m->col);
-    double sum = 0;
+    float sum = 0;
     for (int i = 0; i < m->row; i++) {
         for (int j = 0; j < m->col; j++) {
             sum += exp(m->data[i * m->col + j]);
@@ -59,19 +59,19 @@ Matrice* dSoftmax(Matrice* m) {
     }
     for (int i = 0; i < m->row; i++) {
         for (int j = 0; j < m->col; j++) {
-            double s = exp(m->data[i * m->col + j]) / sum;
+            float s = exp(m->data[i * m->col + j]) / sum;
             mat->data[i * m->col + j] = s * (1 - s);
         }
     }
     return mat;
 }
 
-double init_weight() { 
+float init_weight() { 
 	return ((1.0 * rand()) / (RAND_MAX /2)) - 1;  //des chiffres [-1 , 1]
 }
 
 
-double init_bias() {
+float init_bias() {
 	return (rand() % 20 + 1);
 }
 
@@ -79,7 +79,7 @@ double init_bias() {
 void Rand_Matrice(Matrice* m) {
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
-			double w = init_weight();
+			float w = init_weight();
 			m->data[i * m->col + j] = w;
 		}
 	}
@@ -88,7 +88,7 @@ void Rand_Matrice(Matrice* m) {
 void Rand_Bias(Matrice* m) {
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
-			double b = init_bias();
+			float b = init_bias();
 			m->data[i * m->col + j] = b;
 		}
 	}

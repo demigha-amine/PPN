@@ -51,7 +51,7 @@ static void test_net_rate(void **state) {
 
 
     
-	double NET_RATE = predict_rate_network(net, images, labels, test_size,1);
+	float NET_RATE = predict_rate_network(net, images, labels, test_size,1);
     
 
 	
@@ -68,7 +68,7 @@ static void test_net_rate(void **state) {
     free(images);
     free(labels);
 
-    assert_in_range(NET_RATE, 0.0, 100.0);
+    assert_in_range(NET_RATE, 80.0, 100.0);
 
 }
 
@@ -78,7 +78,11 @@ int main(void) {
         cmocka_unit_test(test_net_rate),
     };
 
-    return cmocka_run_group_tests(tests, NULL, NULL);
+    int ret = cmocka_run_group_tests(tests, NULL, NULL);
 
+	if (ret > 0) printf("Failed %d tests\n", num_failures);
+	else printf("All tests passed\n");
     
+
+    return ret;
 }
