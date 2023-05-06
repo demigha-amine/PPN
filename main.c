@@ -80,16 +80,20 @@ int main(int argc, char **argv) {
 	fclose(labelFile);
 
 
-    
+    clock_t test_begin = clock();
 	float NET_RATE = predict_rate_network(net, images, labels, test_size, choix);
+	clock_t test_end = clock();
+
+	// TEST TIME
+  	float test_delta = (float) (test_end - test_begin) / CLOCKS_PER_SEC;
 
 	
 	// TRAINING DATASET & HIDDEN NODES PERFORMANCE
 
-	printf("%d; %d; %d; %1.6f\n",
+	printf("%d; %d; %1.6f; %1.6f\n",
 	 training_size,
 	 HIDDEN_NODES,
-	 test_offset,
+	 test_delta,
 	 NET_RATE);
 
 

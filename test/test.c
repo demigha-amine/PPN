@@ -8,7 +8,7 @@
 
 static void test_net_rate(void **state) {
 
-    int training_size = 10000;
+    int training_size = 40000;
 	int HIDDEN_NODES = 300;
 	int test_offset = 0;
 	int test_size = 1000;
@@ -80,7 +80,7 @@ int main(void) {
 
     int ret = cmocka_run_group_tests(tests, NULL, NULL);
 
-	if (ret > 0) printf("Failed %d tests\n", num_failures);
+	if (ret > 0) printf("Test Failed: Net Rate < 80%%\n");
 	else printf("All tests passed\n");
     
 

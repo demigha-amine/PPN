@@ -73,7 +73,7 @@ void save_mat(Matrice* m, char* file) {
 			fprintf(fichier, "%.6f\n", m->data[i * m->col + j]);
 		}
 	}
-	printf("Successfully saved Matrice to %s\n", file);
+	//printf("Successfully saved Matrice to %s\n", file);
 	fclose(fichier);
 }
 
@@ -88,12 +88,12 @@ Matrice* charger_mat(char* file) {
 
 	Matrice* m = create_mat(row, col);
 
-	#pragma omp parallel for
+	//#pragma omp parallel for
 
 	for (int i = 0; i < m->row; i++) {
 		for (int j = 0; j < m->col; j++) {
 			fgets(tab, MAX, fichier);
-			m->data[i * m->col + j] = strtod(tab, NULL);
+			m->data[i * m->col + j] = strtod(tab, NULL); 
 		}
 	}
 	printf("Sucessfully loaded Matrice from %s\n", file);

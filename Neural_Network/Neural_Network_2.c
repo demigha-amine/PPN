@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Neural_Network_2.h"
-#include <omp.h>
+
 
 #define MAX_SIZE 8000
 

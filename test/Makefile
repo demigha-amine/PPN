@@ -1,6 +1,6 @@
 CC=gcc -fopenmp
 
-CFLAGS=-g -Wall
+CFLAGS=-g -Wall 
 
 
 
@@ -12,7 +12,7 @@ all: exe
 
 exe:
 	$(CC) $(CFLAGS) $(FILES) -lm -lcblas -lcmocka -o $@
-	./exe
+	OMP_NUM_THREADS=12 ./exe
 
 clean:
 	@rm -Rf exe
