@@ -1,11 +1,19 @@
 # Implémentation d’un réseau de neurones pour la reconnaissance de chiffres manuscrits
 
-La reconnaissance des chiffres manuscrits est un problème classique, pour l'aborder on se base souvent sur le machine learning. Notre projet consiste à la résolution du jeu de données MNIST. Il s’agit d’une base de données regroupant des images de chiffres manuscrits de petite taille (28x28) en noir et blanc.
+## Description
 
-Le but est d’entraîner un programme (dans notre cas un réseau de neurones) à classifier chaque image dans la bonne catégorie (un chiffre de 0 à 9). Ce réseau de neurones que nous allons implémenter de zéro en C, ce qui nécessitera de se familiariser avec la théorie dans un premier temps. Ensuite améliorer sa performance jusqu’à avoir de bons résultats.
+Le projet consiste en l'implémentation d'un réseau de neurones pour la reconnaissance de chiffres manuscrits à partir du jeu de données MNIST. Ce jeu de données contient des images de chiffres manuscrits en noir et blanc de taille 28x28.
 
+Le but du projet est de former le réseau de neurones à classifier correctement chaque image dans la bonne catégorie (un chiffre de 0 à 9).
+
+Le réseau de neurones sera développé en C, ce qui nécessitera une compréhension approfondie de la théorie sous-jacente. Nous visons à améliorer les performances du réseau de neurones jusqu'à obtenir de bons résultats de classification.
+
+## Technologies utilisées
+
+    Langage de programmation C
+    Bibliothèque mathématique BLAS (Basic Linear Algebra Subprograms)
+    
 Le projet se déroulera de la manière suivante:
-
 
 ### Pour le premier semestre:
 
