@@ -30,12 +30,22 @@ En résumé, l’objectif du premier semestre sera de développer une version mi
 
 
 
-## Compilation et Exécution
+## Compilation
 
 Pour lancer le programme `main.c,` il faut le compiler avec `Makefile` avec la commande:
 
       $ make
+      
+## Exécution
 
-Ensuite on lance l'exécutable genèré avec la commande :
+On doit lancer l'exécutable avec OpenMP :
 
-      $ ./exe
+  * Avec une seule couche (1 Hidden Layer) :
+  
+        $ OMP_NUM_THREADS=[NUM THREADS] ./exe [TrainSize] [HiddenNodes] [TestOffset] [TestSize]
+       
+  * Avec 2 couches (2 Hiddens Layer) :
+  
+        $ OMP_NUM_THREADS=[NUM THREADS] ./2Hidden [TrainSize] [HiddenNodes] [TestOffset] [TestSize]
+  
+
